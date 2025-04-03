@@ -9,7 +9,7 @@
     </additionalParameters>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="honest-be" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="ru.honest.HonestBeApplication" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ru.honest.App" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
