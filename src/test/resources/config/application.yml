@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/honest_test
+
+  flyway:
+    validate-on-migrate: false
+    clean-disabled: false

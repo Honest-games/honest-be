@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="ru.honest.mybatis.repo.DecksRepo">
+    
+    <sql id="all">id, name, language_code, description, labels, vector_image_id, hidden, promo</sql>
+    
+    <select id="getDecks">
+        SELECT
+            <include refid="all"/>
+        FROM decks
+    </select>
+
+    <select id="getCardsCounts">
+        SELECT d.id, count(*)
+        FROM decks d
+        LEFT JOIN levels l on l.deck_id = d.id
+        LEFT JOIN questions q on l.id = q.level_id
+        WHERE <choose>
+            <when test="decksIds.size > 0">
+                d.id IN (<foreach collection="decksIds" item="id" separator=",">#{id}</foreach>)
+            </when>
+            <otherwise>false</otherwise>
+        </choose>
+        group by d.id
+    </select>
+    
+<!--    <select id="getOpenedCounts">
+        SELECT d.id, count(*)
+        FROM decks d
+        LEFT JOIN levels l on l.deck_id = d.id
+        LEFT JOIN questions q on l.id = q.level_id
+        JOIN used_questions uq on uq.question_id = q.id
+        WHERE <choose>
+            <when test="decksIds.size > 0">
+                d.id IN (<foreach collection="decksIds" item="id" separator=",">#{id}</foreach>)
+            </when>
+            <otherwise>false</otherwise>
+        </choose>
+        group by d.id
+    </select>-->
+
+    <insert id="save">
+        INSERT INTO decks
+        VALUES (#{id}, #{languageCode}, #{name},
+                #{description}, #{labels}, #{imageId}, #{hidden}, #{promo})
+    </insert>
+</mapper>

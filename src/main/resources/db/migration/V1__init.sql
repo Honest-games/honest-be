@@ -1,27 +1,23 @@
 CREATE TABLE IF NOT EXISTS decks
 (
-    id              varchar NOT NULL primary key,
-    language_code   varchar(10)  NOT NULL,
-    name            varchar NOT NULL,
-    emoji           varchar          DEFAULT NULL,
+    id              varchar     NOT NULL primary key,
+    language_code   varchar(10) NOT NULL,
+    name            varchar     NOT NULL,
     description     text,
-    labels          varchar          DEFAULT NULL,
-    vector_image_id varchar          DEFAULT NULL,
-    hidden          bool         NOT NULL DEFAULT false,
-    promo           varchar          DEFAULT NULL unique
+    labels          varchar              DEFAULT NULL,
+    vector_image_id varchar     NOT NULL,
+    hidden          bool        NOT NULL DEFAULT false,
+    promo           varchar              DEFAULT NULL unique
 );
 
 CREATE TABLE IF NOT EXISTS levels
 (
     id           varchar NOT NULL primary key,
     deck_id      varchar NOT NULL,
-    level_order  int          NOT NULL,
+    level_order  int     NOT NULL,
     name         varchar NOT NULL,
-    emoji        varchar DEFAULT NULL,
-    color_start  varchar NOT NULL,
-    color_end    varchar NOT NULL,
-    color_button varchar NOT NULL,
-    description  text         NOT NULL
+    color        varchar NOT NULL,
+    description  text    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS questions
@@ -34,11 +30,11 @@ CREATE TABLE IF NOT EXISTS questions
 
 CREATE TABLE IF NOT EXISTS questions_history
 (
-    id            varchar NOT NULL PRIMARY KEY default gen_random_uuid(),
-    level_id      varchar NOT NULL,
-    question_id   varchar NOT NULL,
-    client_id     varchar  NOT NULL,
-    question_time timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id            varchar   NOT NULL PRIMARY KEY default gen_random_uuid(),
+    level_id      varchar   NOT NULL,
+    question_id   varchar   NOT NULL,
+    client_id     varchar   NOT NULL,
+    question_time timestamp NOT NULL             DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS unlocked_decks

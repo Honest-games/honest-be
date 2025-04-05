@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="ru.honest.mybatis.repo.QuestionsRepo">
+    
+    <sql id="all">id, text</sql>
+
+    <select id="getQuestionsByLevel">
+        SELECT <include refid="all"/>
+        FROM questions
+        WHERE level_id = #{levelId}
+    </select>
+
+    <insert id="save">
+        INSERT INTO questions
+        VALUES (#{id}, #{levelId}, #{text}, #{additionalTest})
+    </insert>
+</mapper>

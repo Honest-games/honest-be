@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="local" />
     <additionalParameters>
       <param>
         <option name="enabled" value="true" />
@@ -10,6 +11,7 @@
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="honest-be" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ru.honest.App" />
+    <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndTriggerFile" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
