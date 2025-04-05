@@ -13,7 +13,7 @@ class DecksController(
 ) {
     @GetMapping
     fun getDecks(
-        @RequestParam(required = true) clientId: String,
+        @RequestParam clientId: String,
     ): List<DeckOutput> {
         val decksWithCounts = decksService.getDecksForMainPage(clientId)
         return decksWithCounts

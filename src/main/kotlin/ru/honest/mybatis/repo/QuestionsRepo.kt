@@ -1,6 +1,7 @@
 package ru.honest.mybatis.repo
 
 import org.apache.ibatis.annotations.Mapper
+import ru.honest.mybatis.model.QuestionModel
 
 @Mapper
 interface QuestionsRepo {
@@ -11,9 +12,3 @@ interface QuestionsRepo {
     fun save(question: QuestionModel)
 }
 
-data class QuestionModel(
-    val id: String,
-    val levelId: String,
-    val text: String,
-    val additionalTest: String?,
-)

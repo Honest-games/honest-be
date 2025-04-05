@@ -1,11 +1,9 @@
 package ru.honest.factory
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
-import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.model.LevelModel
-import ru.honest.mybatis.repo.QuestionModel
+import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.repo.QuestionsRepo
 import java.util.*
 

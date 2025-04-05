@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="ru.honest.mybatis.repo.UsedQuestionsRepo">
+
+    <sql id="all">question_id, client_id</sql>
+
+    <select id="getUsedQuestions">
+        SELECT <include refid="all"/>
+        FROM used_questions
+        WHERE client_id = #{clientId}
+        <if test="levelsIds != null">
+            <choose>
+                <when test="levelsIds.size > 0">
+                    AND question_id IN (SELECT id from questions where level_id IN (
+                        <foreach collection="levelsIds" item="id" separator=",">
+                            #{id}
+                        </foreach>
+                    ))
+                </when>
+                <otherwise>AND false</otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <insert id="save">
+        INSERT INTO used_questions
+        VALUES (#{questionId}, #{clientId})
+    </insert>
+
+    <delete id="clearUsedQuestions">
+        DELETE FROM used_questions
+        WHERE client_id = #{clientId}
+        <choose>
+            <when test="levelsIds.size > 0">
+                AND question_id IN (select id from questions where level_id IN (
+                    <foreach collection="levelsIds" item="id" separator=",">#{id}</foreach>
+                ))
+            </when>
+            <otherwise>AND false</otherwise>
+        </choose>
+    </delete>
+</mapper>

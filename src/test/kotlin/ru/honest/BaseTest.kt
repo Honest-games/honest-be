@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @FlywayTest
 @ExtendWith(SpringExtension::class)
+@ActiveProfiles("test")
 class BaseTest {
     @LocalServerPort
     var port: Int = 0
@@ -27,10 +29,5 @@ class BaseTest {
     fun setup() {
         flyway.clean()
         flyway.migrate()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        flyway.clean()
     }
 }
