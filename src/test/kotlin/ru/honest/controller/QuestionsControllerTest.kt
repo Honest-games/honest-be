@@ -1,7 +1,6 @@
 package ru.honest.controller
 
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode.ALL
@@ -10,6 +9,8 @@ import ru.honest.config.HonestProps
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
+import ru.honest.mybatis.model.QuestionHistoryModel
+import ru.honest.mybatis.repo.QuestionsHistoryRepo
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -18,7 +19,8 @@ class QuestionsControllerTest(
     private val decksFactory: DecksFactory,
     private val levelsFactory: LevelsFactory,
     private val questionsFactory: QuestionsFactory,
-    private val honestProps: HonestProps
+    private val honestProps: HonestProps,
+    private val historyRepo: QuestionsHistoryRepo,
 ) : BaseTest() {
     @Test
     fun `returns random questions and last card for many clients`() {
@@ -82,5 +84,23 @@ class QuestionsControllerTest(
                 gotIds.clear()
             }
         }
+    }
+
+    @Test
+    fun `history writes`(){
+        val deck = decksFactory.createDeck()
+        val level = levelsFactory.createLevel(deck)
+        val questionsCount = 3
+        val questions = List(questionsCount) { questionsFactory.createQuestion(level) }
+        val playTimes = 5
+        val clientId = "clientId"
+
+        List(questionsCount * playTimes + playTimes) { questionsController.getRandomQuestion(level.id, clientId = clientId) }
+
+        val history = historyRepo.findAll().map { Triple(it.clientId, it.questionId, it.levelId) }
+        val expectedHistory = questions.flatMap { q ->
+            List(playTimes) {q}.map { Triple(clientId, q.id, level.id) }
+        }
+        assertEquals(expectedHistory.sortedBy { it.second }, history.sortedBy { it.second })
     }
 }
