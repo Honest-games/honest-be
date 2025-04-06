@@ -3,7 +3,7 @@
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace="ru.honest.mybatis.repo.QuestionsRepo">
     
-    <sql id="all">id, text</sql>
+    <sql id="all">id, level_id, text, additional_text</sql>
 
     <select id="getQuestionsByLevel">
         SELECT <include refid="all"/>

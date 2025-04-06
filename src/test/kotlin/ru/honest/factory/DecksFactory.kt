@@ -6,8 +6,8 @@ import ru.honest.mybatis.repo.DecksRepo
 
 @Component
 class DecksFactory(
-    private val decksRepo: DecksRepo
-): BaseFactory() {
+    private val decksRepo: DecksRepo,
+) : BaseFactory() {
     fun createDeck(): DeckModel {
         val deck = DeckModel(
             id = num.toString(),

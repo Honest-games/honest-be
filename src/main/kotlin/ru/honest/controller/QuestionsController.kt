@@ -13,11 +13,12 @@ class QuestionsController(
     private val questionsService: QuestionsService,
 ) {
     @GetMapping("/random")
-    fun random(
+    fun getRandomQuestion(
         @RequestParam levelId: String,
         @RequestParam clientId: String,
     ): QuestionModel {
         //TODO тест на валидацию левела
+        //TODO is_last field
         return questionsService.readRandomQuestion(levelId, clientId)
     }
 }

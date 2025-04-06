@@ -2,6 +2,7 @@ package ru.honest.factory
 
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
+import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.repo.LevelsRepo
 
@@ -11,10 +12,12 @@ class LevelsFactory(
     @Lazy
     private val decksFactory: DecksFactory,
 ): BaseFactory() {
-    fun createLevel(): LevelModel {
+    fun createLevel(
+        deck: DeckModel = decksFactory.createDeck(),
+    ): LevelModel {
         val level = LevelModel(
             id = "$num",
-            deckId = decksFactory.createDeck().id,
+            deckId = deck.id,
             order = num,
             name = "level $num",
             color = "0,0,0",
