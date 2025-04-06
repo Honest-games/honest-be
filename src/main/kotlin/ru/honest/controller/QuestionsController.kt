@@ -16,9 +16,9 @@ class QuestionsController(
     fun getRandomQuestion(
         @RequestParam levelId: String,
         @RequestParam clientId: String,
-    ): QuestionModel {
+    ): QuestionOutput {
         //TODO тест на валидацию левела
-        //TODO is_last field
-        return questionsService.readRandomQuestion(levelId, clientId)
+        val answer = questionsService.readRandomQuestion(levelId, clientId)
+        return QuestionOutput.create(answer.question, answer.isLast)
     }
 }

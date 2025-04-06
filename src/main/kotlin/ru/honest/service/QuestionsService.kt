@@ -23,7 +23,7 @@ class QuestionsService(
     fun readRandomQuestion(
         levelId: String,
         clientId: String,
-    ): QuestionModel {
+    ): GetRandQuestionAnswer {
         val usedLevelQuestions = usedQuestionsRepo.getUsedQuestions(clientId, setOf(levelId))
         val questions = questionsRepo.getQuestionsByLevel(levelId)
         val notUsedQuestions = (
@@ -31,12 +31,12 @@ class QuestionsService(
             .values
         if (notUsedQuestions.isEmpty()) {
             usedQuestionsRepo.clearUsedQuestions(setOf(levelId), clientId)
-            return QuestionModel(
+            return GetRandQuestionAnswer(QuestionModel(
                 id = "-1",
                 levelId = levelId,
                 text = honestProps.lastCardText,
                 additionalTest = null
-            )
+            ), true)
         }
         val question = notUsedQuestions.random()
         usedQuestionsRepo.save(UsedQuestion(question.id, clientId))
@@ -48,6 +48,11 @@ class QuestionsService(
             clientId = clientId,
             time = LocalDateTime.now()
         ))
-        return question
+        return GetRandQuestionAnswer(question, false)
     }
 }
+
+data class GetRandQuestionAnswer(
+    val question: QuestionModel,
+    val isLast: Boolean,
+)

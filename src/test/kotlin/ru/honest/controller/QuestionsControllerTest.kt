@@ -1,5 +1,7 @@
 package ru.honest.controller
 
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode.ALL
@@ -69,10 +71,14 @@ class QuestionsControllerTest(
         val gotIds = mutableSetOf<String>()
 
         List((questions.size+1) * playTimes) {
-            gotIds.add(getQuestion().id)
+            val nonLastQuestion = getQuestion()
+            gotIds.add(nonLastQuestion.id)
+            assertFalse(nonLastQuestion.isLast)
             if(gotIds.size == questions.size) {
                 assertEquals(questions.map { it.id }.toSet(), gotIds)
-                assertEquals("-1", getQuestion().id)
+                val lastQuestion = getQuestion()
+                assertTrue(lastQuestion.isLast)
+                assertEquals("-1", lastQuestion.id)
                 gotIds.clear()
             }
         }
