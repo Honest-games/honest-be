@@ -20,7 +20,9 @@ class BaseTest {
     @LocalServerPort
     var port: Int = 0
 
-    fun baseUrl(): String = "http://localhost:$port"
+    val scheme = "http"
+
+    fun baseUrl(): String = "$scheme://localhost:$port"
 
     @Autowired
     private lateinit var flyway: Flyway

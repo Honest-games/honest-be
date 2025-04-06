@@ -49,3 +49,7 @@ data class QuestionOutput(
         }
     }
 }
+
+data class HonestError(
+    val error: String,
+)

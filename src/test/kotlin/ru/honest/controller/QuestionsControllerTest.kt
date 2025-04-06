@@ -1,9 +1,12 @@
 package ru.honest.controller
 
+import org.apache.hc.core5.net.URIBuilder
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode.ALL
+import org.springframework.web.client.RestClient
+import org.springframework.web.util.UriBuilder
 import ru.honest.BaseTest
 import ru.honest.config.HonestProps
 import ru.honest.factory.DecksFactory
@@ -11,6 +14,7 @@ import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
 import ru.honest.mybatis.model.QuestionHistoryModel
 import ru.honest.mybatis.repo.QuestionsHistoryRepo
+import java.net.URI
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -102,5 +106,38 @@ class QuestionsControllerTest(
             List(playTimes) {q}.map { Triple(clientId, q.id, level.id) }
         }
         assertEquals(expectedHistory.sortedBy { it.second }, history.sortedBy { it.second })
+    }
+
+    @Test
+    fun `getRandom,level not exist - error`(){
+        val deck = decksFactory.createDeck()
+        val level = levelsFactory.createLevel(deck)
+        val questionsCount = 3
+        List(questionsCount) { questionsFactory.createQuestion(level) }
+
+        val levelId = "nonExistLevel"
+        val answer = getRandQuestionHttpRaw("clientId", levelId)
+            .onStatus {
+                assertTrue(it.statusCode.is4xxClientError) { "Status should be 4xx" }
+                true
+            }
+            .body(HonestError::class.java)
+        assertEquals("Level $levelId not found", answer?.error)
+    }
+
+    fun getRandQuestion(
+        clientId: String,
+        levelId: String,
+    ): QuestionOutput {
+        return getRandQuestionHttpRaw(clientId, levelId).body(QuestionOutput::class.java)!!
+    }
+
+    fun getRandQuestionHttpRaw(
+        clientId: String,
+        levelId: String,
+    ): RestClient.ResponseSpec {
+        return RestClient.create().get()
+            .uri(baseUrl() + "/api/v1/questions/random?clientId=$clientId&levelId=$levelId")
+            .retrieve()
     }
 }

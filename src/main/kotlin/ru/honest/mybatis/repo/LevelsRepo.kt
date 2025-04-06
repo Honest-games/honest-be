@@ -7,5 +7,6 @@ import ru.honest.mybatis.model.LevelModel
 interface LevelsRepo {
     fun getLevelsByDeck(deckId: String): List<LevelModel>
     fun save(level: LevelModel)
+    fun exists(levelId: String): Boolean
 }
 
