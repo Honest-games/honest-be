@@ -16,7 +16,6 @@ class QuestionsController(
         @RequestParam levelId: String,
         @RequestParam clientId: String,
     ): QuestionOutput {
-        //TODO levelId validation
         val answer = questionsService.readRandomQuestion(levelId, clientId)
         return QuestionOutput.create(answer.question, answer.isLast)
     }

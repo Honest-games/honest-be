@@ -18,6 +18,7 @@ class DecksService(
             it,
             cardsCounts[it.id]?.count ?: 0,
 //            openedCounts[it.id]?.count ?: 0
+            // TODO openedCount + tests
             0
         ) }
     }

@@ -1,20 +1,16 @@
 package ru.honest.controller
 
-import org.apache.hc.core5.net.URIBuilder
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode.ALL
 import org.springframework.web.client.RestClient
-import org.springframework.web.util.UriBuilder
 import ru.honest.BaseTest
 import ru.honest.config.HonestProps
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
-import ru.honest.mybatis.model.QuestionHistoryModel
 import ru.honest.mybatis.repo.QuestionsHistoryRepo
-import java.net.URI
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -117,12 +113,9 @@ class QuestionsControllerTest(
 
         val levelId = "nonExistLevel"
         val answer = getRandQuestionHttpRaw("clientId", levelId)
-            .onStatus {
-                assertTrue(it.statusCode.is4xxClientError) { "Status should be 4xx" }
-                true
-            }
-            .body(HonestError::class.java)
-        assertEquals("Level $levelId not found", answer?.error)
+            .toEntity(HonestError::class.java)
+        assertTrue(answer.statusCode.is4xxClientError) { "Status should be 4xx" }
+        assertEquals("Level $levelId not found", answer.body!!.error)
     }
 
     fun getRandQuestion(
@@ -139,5 +132,6 @@ class QuestionsControllerTest(
         return RestClient.create().get()
             .uri(baseUrl() + "/api/v1/questions/random?clientId=$clientId&levelId=$levelId")
             .retrieve()
+            .onStatus({it.is4xxClientError || it.is5xxServerError }) { request, response -> }
     }
 }

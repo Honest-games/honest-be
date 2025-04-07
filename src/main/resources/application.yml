@@ -2,6 +2,7 @@ server:
   port: 8080
   error:
     include-stacktrace: never
+    include-message: never
 
 spring:
   cloud:
@@ -27,10 +28,16 @@ spring:
 mybatis:
   config-location: classpath:/mybatis‑config.xml
   mapper-locations: classpath*:mappers/*.xml
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger
 
 honest:
   last-card-text: ${LAST_CARD_TEXT}
-
 ---
 
 spring:
