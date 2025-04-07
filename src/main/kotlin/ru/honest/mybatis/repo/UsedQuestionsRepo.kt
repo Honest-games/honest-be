@@ -7,7 +7,7 @@ import ru.honest.mybatis.model.UsedQuestion
 interface UsedQuestionsRepo {
     fun getUsedQuestions(
         clientId: String?,
-        levelsIds: Set<String>? = null,
+        levelsIds: Collection<String>? = null,
     ): List<UsedQuestion>
 
     fun save(usedQuestion: UsedQuestion)

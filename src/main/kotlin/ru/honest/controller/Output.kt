@@ -11,11 +11,9 @@ data class DeckOutput(
     val description: String?,
     val labels: List<String>,
     val imageId: String,
-    val cardsCount: Int,
-    val openedCount: Int,
 ){
     companion object {
-        fun create(deck: DeckModel, cardsCount: Int, openedCount: Int): DeckOutput {
+        fun create(deck: DeckModel): DeckOutput {
             return DeckOutput(
                 id = deck.id,
                 languageCode = deck.languageCode,
@@ -23,8 +21,6 @@ data class DeckOutput(
                 description = deck.description,
                 labels = deck.labels?.split(";") ?: emptyList(),
                 imageId = deck.imageId,
-                cardsCount = cardsCount,
-                openedCount = openedCount
             )
         }
     }

@@ -11,6 +11,20 @@
         WHERE deck_id = #{deckId}
     </select>
 
+    <select id="getByParams">
+        SELECT <include refid="all"/>
+        FROM levels
+        WHERE true
+        <if test="decksIds != null">
+            <choose>
+                <when test="decksIds.size > 0">
+                    AND deck_id IN (<foreach collection="decksIds" item="id" separator=",">#{id}</foreach>)
+                </when>
+                <otherwise>AND false</otherwise>
+            </choose>
+        </if>
+    </select>
+
     <insert id="save">
         INSERT INTO levels
         VALUES (#{id}, #{deckId}, #{order}, #{name}, #{color}, #{description})

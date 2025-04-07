@@ -8,9 +8,11 @@ import ru.honest.mybatis.repo.DecksRepo
 class DecksFactory(
     private val decksRepo: DecksRepo,
 ) : BaseFactory() {
-    fun createDeck(): DeckModel {
+    fun createDeck(
+        id: String = num.toString(),
+    ): DeckModel {
         val deck = DeckModel(
-            id = num.toString(),
+            id = id,
             name = "name$num",
             languageCode = "RU",
             description = "desc $num",

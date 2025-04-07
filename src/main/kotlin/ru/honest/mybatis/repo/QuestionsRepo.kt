@@ -10,5 +10,9 @@ interface QuestionsRepo {
     ): List<QuestionModel>
 
     fun save(question: QuestionModel)
+
+    fun getByParams(
+        levelsIds: List<String>? = null
+    ): List<QuestionModel>
 }
 

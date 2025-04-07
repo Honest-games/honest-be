@@ -15,4 +15,18 @@
         INSERT INTO questions
         VALUES (#{id}, #{levelId}, #{text}, #{additionalTest})
     </insert>
+
+    <select id="getByParams">
+        SELECT <include refid="all"/>
+        FROM questions
+        WHERE true
+        <if test="levelsIds != null">
+            <choose>
+                <when test="levelsIds.size > 0">
+                    AND level_id IN (<foreach collection="levelsIds" separator="," item="id">#{id}</foreach>)
+                </when>
+                <otherwise>AND false</otherwise>
+            </choose>
+        </if>
+    </select>
 </mapper>

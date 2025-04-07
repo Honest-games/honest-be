@@ -13,11 +13,13 @@ class LevelsFactory(
     private val decksFactory: DecksFactory,
 ): BaseFactory() {
     fun createLevel(
-        deck: DeckModel = decksFactory.createDeck(),
+        deck: DeckModel? = null,
+        id: String = num.toString(),
     ): LevelModel {
+        val createdDeck = deck ?: decksFactory.createDeck()
         val level = LevelModel(
-            id = "$num",
-            deckId = deck.id,
+            id = id,
+            deckId = createdDeck.id,
             order = num,
             name = "level $num",
             color = "0,0,0",
