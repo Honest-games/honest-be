@@ -9,10 +9,10 @@ class DecksFactory(
     private val decksRepo: DecksRepo,
 ) : BaseFactory() {
     fun createDeck(
-        id: String = num.toString(),
+        id: String? = null,
     ): DeckModel {
         val deck = DeckModel(
-            id = id,
+            id = id ?: num.toString(),
             name = "name$num",
             languageCode = "RU",
             description = "desc $num",

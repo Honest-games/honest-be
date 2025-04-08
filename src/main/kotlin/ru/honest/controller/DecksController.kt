@@ -1,5 +1,6 @@
 package ru.honest.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,10 +13,11 @@ class DecksController(
     private val decksService: DecksService
 ) {
     @GetMapping
+    @Operation(summary = "Get all decks (WITHOUT LANGUAGE PARAM NOW)")
     fun getDecks(
         @RequestParam clientId: String,
     ): List<DeckOutput> {
-        val decksWithCounts = decksService.getDecksForMainPage(clientId)
-        return decksWithCounts
+        val decks = decksService.getDecksForMainPage(clientId)
+        return decks
     }
 }

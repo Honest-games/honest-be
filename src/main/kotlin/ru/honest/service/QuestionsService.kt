@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.honest.config.HonestProps
 import ru.honest.exception.HonestEntityNotFound
+import ru.honest.filterKeysNotNull
+import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.model.QuestionHistoryModel
 import ru.honest.mybatis.model.UsedQuestion
 import ru.honest.mybatis.model.QuestionModel
@@ -55,9 +57,16 @@ class QuestionsService(
         ))
         return GetRandQuestionAnswer(question, false)
     }
-}
 
-data class GetRandQuestionAnswer(
-    val question: QuestionModel,
-    val isLast: Boolean,
-)
+    fun getQuestionsByLevel(levels: List<LevelModel>): Map<LevelModel, List<QuestionModel>>{
+        val questions = questionsRepo.getByParams(levels.map { it.id })
+        return questions.groupBy { q ->
+            levels.find { q.levelId == it.id }
+        }.filterKeysNotNull()
+    }
+
+    data class GetRandQuestionAnswer(
+        val question: QuestionModel,
+        val isLast: Boolean,
+    )
+}
