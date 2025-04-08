@@ -78,7 +78,6 @@ data class LevelOutput(
 }
 
 // TODO скрытые колоды
-// TODO картинки
 
 data class LevelCountsOutput(
     val questionsCount: Int,
