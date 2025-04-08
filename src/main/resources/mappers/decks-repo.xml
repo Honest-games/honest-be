@@ -9,6 +9,10 @@
         SELECT
             <include refid="all"/>
         FROM decks
+        WHERE true
+        <if test="promo != null">
+            AND promo = #{promo}
+        </if>
     </select>
 
     <select id="getCardsCounts">
@@ -25,24 +29,18 @@
         group by d.id
     </select>
     
-<!--    <select id="getOpenedCounts">
-        SELECT d.id, count(*)
-        FROM decks d
-        LEFT JOIN levels l on l.deck_id = d.id
-        LEFT JOIN questions q on l.id = q.level_id
-        JOIN used_questions uq on uq.question_id = q.id
-        WHERE <choose>
-            <when test="decksIds.size > 0">
-                d.id IN (<foreach collection="decksIds" item="id" separator=",">#{id}</foreach>)
-            </when>
-            <otherwise>false</otherwise>
-        </choose>
-        group by d.id
-    </select>-->
+    <select id="getUnlockedDecksIds">
+        SELECT deck_id FROM unlocked_decks WHERE client_id = #{clientId}
+    </select>
 
     <insert id="save">
         INSERT INTO decks
         VALUES (#{id}, #{languageCode}, #{name},
                 #{description}, #{labels}, #{imageId}, #{hidden}, #{promo})
+    </insert>
+
+    <insert id="unlockDeck">
+        INSERT INTO unlocked_decks (client_id, deck_id) VALUES
+            (#{clientId}, #{deckId})
     </insert>
 </mapper>

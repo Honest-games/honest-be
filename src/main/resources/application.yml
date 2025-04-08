@@ -4,6 +4,10 @@ server:
     include-stacktrace: never
     include-message: never
 
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
 spring:
   cloud:
     config:

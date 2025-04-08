@@ -10,6 +10,8 @@ class DecksFactory(
 ) : BaseFactory() {
     fun createDeck(
         id: String? = null,
+        hidden: Boolean = false,
+        promo: String? = null,
     ): DeckModel {
         val deck = DeckModel(
             id = id ?: num.toString(),
@@ -18,11 +20,12 @@ class DecksFactory(
             description = "desc $num",
             labels = "$num;$num",
             imageId = "image$num",
-            hidden = false,
-            promo = null,
+            hidden = hidden,
+            promo = promo,
         )
         decksRepo.save(deck)
         return deck
     }
 
+    fun unlockDeck(clientId: String, deckId: String) = decksRepo.unlockDeck(clientId, deckId)
 }

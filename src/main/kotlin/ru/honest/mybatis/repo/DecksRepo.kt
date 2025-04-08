@@ -6,9 +6,12 @@ import ru.honest.mybatis.model.DeckCardsCount
 
 @Mapper
 interface DecksRepo {
-    fun getDecks(): List<DeckModel>
+    fun getDecks(
+        promo: String? = null,
+    ): List<DeckModel>
     fun getCardsCounts(decksIds: List<String>): List<DeckCardsCount> = listOf()
-//    fun getOpenedCounts(decksIds: List<String>, clientId: String): List<DeckCardsCount> = listOf()
+    fun getUnlockedDecksIds(clientId: String): List<String>
     fun save(deck: DeckModel)
+    fun unlockDeck(clientId: String, deckId: String)
 }
 

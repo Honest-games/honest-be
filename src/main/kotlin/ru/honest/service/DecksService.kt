@@ -9,10 +9,15 @@ class DecksService(
     private val decksRepo: DecksRepo,
 ) {
     fun getDecksForMainPage(clientId: String): List<DeckOutput> {
-        val decks = decksRepo.getDecks()
-        val decksIds = decks.map { it.id }
+        val unlockedDecks = decksRepo.getUnlockedDecksIds(clientId).toSet()
+        val decksToReturn = decksRepo.getDecks()
+            .filter { !it.hidden || unlockedDecks.contains(it.id) }
 
-        return decks.map { DeckOutput.create(it) }
+        return decksToReturn.map { DeckOutput.create(it) }
     }
+
+    fun tryUnlockDeck(clientId: String, promo: String) =
+        decksRepo.getDecks(promo = promo).firstOrNull()?.let { decksRepo.unlockDeck(clientId, it.id) }
+
 }
 

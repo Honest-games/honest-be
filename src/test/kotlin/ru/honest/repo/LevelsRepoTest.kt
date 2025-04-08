@@ -80,14 +80,14 @@ class LevelsRepoTest(
             )
         }
     }
+
+    data class TestCase(
+        val setup: (f: LevelsFactory, df: DecksFactory) -> List<TestCaseData>,
+        val getData: (r: LevelsRepo) -> List<LevelModel>
+    )
+
+    data class TestCaseData(
+        val item: LevelModel,
+        val shouldBeReturned: Boolean,
+    )
 }
-
-data class TestCase(
-    val setup: (f: LevelsFactory, df: DecksFactory) -> List<TestCaseData>,
-    val getData: (r: LevelsRepo) -> List<LevelModel>
-)
-
-data class TestCaseData(
-    val item: LevelModel,
-    val shouldBeReturned: Boolean,
-)
