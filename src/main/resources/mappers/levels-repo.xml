@@ -23,6 +23,9 @@
                 <otherwise>AND false</otherwise>
             </choose>
         </if>
+        <if test="id != null">
+            AND id = #{id}
+        </if>
     </select>
 
     <insert id="save">

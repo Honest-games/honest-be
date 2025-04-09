@@ -12,5 +12,8 @@ interface UsedQuestionsRepo {
 
     fun save(usedQuestion: UsedQuestion)
 
-    fun clearUsedQuestions(levelsIds: Set<String>, clientId: String)
+    fun clearUsedQuestions(
+        levelsIds: Collection<String>,
+        clientId: String
+    )
 }

@@ -9,11 +9,17 @@ import org.springframework.web.client.HttpClientErrorException.BadRequest
 import org.springframework.web.client.RestClient
 import ru.honest.BaseTest
 import ru.honest.factory.DecksFactory
+import ru.honest.factory.LevelsFactory
+import ru.honest.factory.QuestionsFactory
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
 class DecksControllerTest(
     private val decksFactory: DecksFactory,
+    private val levelsFactory: LevelsFactory,
+    private val questionsFactory: QuestionsFactory,
+    private val questionsController: QuestionsController,
+    private val levelsController: LevelsController,
 ): BaseTest() {
     @Test
     fun `without clientId - fail`() {
@@ -51,6 +57,48 @@ class DecksControllerTest(
         assertEquals(1, getDecks(clientId).size)
     }
 
+
+    @Test
+    fun `shuffle, wrong levelId - 4xx`(){
+        assertThrows<BadRequest> {
+            shuffleDeck("some", "1")
+        }
+    }
+
+    @Test
+    fun `shuffle, wrong clientId - 4xx`(){
+        assertThrows<BadRequest> {
+            shuffleDeck("some")
+        }
+    }
+
+    @Test
+    fun `shuffle - shuffles`(){
+        val deck1 = decksFactory.createDeck()
+        val deck2 = decksFactory.createDeck()
+
+        val levels = listOf(deck1, deck2).map { deck -> List(3){levelsFactory.createLevel(deck)} }
+        val questions = levels.map { it.map { level -> List(3){questionsFactory.createQuestion(level)} } }
+        val clientId = "1"
+
+        levels.flatten().forEach { questionsController.getRandomQuestion(it.id, clientId) }
+
+        shuffleDeck(deck1.id, clientId)
+
+        val levels1 = levelsController.getLevels(clientId, deck1.id)
+        val levels2 = levelsController.getLevels(clientId, deck2.id)
+
+        levels1.forEach { assertEquals(0, it.counts.openedQuestionsCount) }
+        levels2.forEach { assertEquals(1, it.counts.openedQuestionsCount) }
+
+        val gotQuestions = levels1.map { level -> List(3) { questionsController.getRandomQuestion(level.id, clientId) } }
+
+        assertEquals(
+            questions[0].flatten().map { it.id }.sorted(),
+            gotQuestions.flatten().map { it.id }.sorted()
+        )
+    }
+
     fun getDecks(clientId: String? = null): List<DeckOutput> {
         val url = baseUrl() + "/api/v1/decks" +
                 (("?clientId=$clientId").takeIf { clientId != null } ?: "")
@@ -65,5 +113,14 @@ class DecksControllerTest(
                 (("?clientId=$clientId").takeIf { clientId != null } ?: "")
         val restClient = RestClient.create()
         restClient.post().uri(url).retrieve()
+    }
+
+    fun shuffleDeck(
+        deckId: String,
+        clientId: String? = null,
+    ) {
+        val url = baseUrl() + "/api/v1/decks/$deckId/shuffle" +
+                (("?clientId=$clientId").takeIf { clientId != null } ?: "")
+        RestClient.create().post().uri(url).retrieve().body(String::class.java)
     }
 }

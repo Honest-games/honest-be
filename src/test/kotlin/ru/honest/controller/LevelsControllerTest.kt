@@ -19,6 +19,7 @@ class LevelsControllerTest(
     private val levelsFactory: LevelsFactory,
     private val questionsFactory: QuestionsFactory,
     private val questionsController: QuestionsController,
+    private val levelsController: LevelsController,
 ) : BaseTest() {
     @Test
     fun `without clientId - fail`() {
@@ -117,6 +118,49 @@ class LevelsControllerTest(
         assertEquals(listOf(0,0), getOpenedCounts())
     }
 
+    @Test
+    fun `shuffle, wrong levelId - 4xx`(){
+        assertThrows<BadRequest> {
+            shuffleLevel("some", "1")
+        }
+    }
+
+    @Test
+    fun `shuffle, wrong clientId - 4xx`(){
+        assertThrows<BadRequest> {
+            shuffleLevel("some")
+        }
+    }
+
+    @Test
+    fun `shuffle - shuffles`(){
+        val deck = decksFactory.createDeck()
+        val level1 = levelsFactory.createLevel(deck)
+        val level2 = levelsFactory.createLevel(deck)
+
+        val questions = listOf(level1, level2).map { level -> List(3){questionsFactory.createQuestion(level)} }
+
+        val clientId = "1"
+        questionsController.getRandomQuestion(level1.id, clientId)
+        questionsController.getRandomQuestion(level1.id, clientId)
+        questionsController.getRandomQuestion(level2.id, clientId)
+
+        shuffleLevel(level1.id, clientId)
+        val levels = levelsController.getLevels(clientId, deck.id)
+        assertEquals(0, levels[0].counts.openedQuestionsCount)
+        assertEquals(1, levels[1].counts.openedQuestionsCount)
+
+        val questionsAfterShuffle = listOf(
+            questionsController.getRandomQuestion(level1.id, clientId),
+            questionsController.getRandomQuestion(level1.id, clientId),
+            questionsController.getRandomQuestion(level1.id, clientId),
+        )
+        assertEquals(
+            questions[0].map { it.id }.sorted(),
+            questionsAfterShuffle.map { it.id }.sorted()
+        )
+    }
+
     fun getLevels(
         clientId: String? = null,
         deckId: String? = null,
@@ -127,5 +171,14 @@ class LevelsControllerTest(
         val restClient = RestClient.create()
         val body = restClient.get().uri(url).retrieve().body(object : ParameterizedTypeReference<List<LevelOutput>>() {})
         return body!!
+    }
+
+    fun shuffleLevel(
+        levelId: String,
+        clientId: String? = null,
+    ) {
+        val url = baseUrl() + "/api/v1/levels/$levelId/shuffle" +
+                (("?clientId=$clientId").takeIf { clientId != null } ?: "")
+        RestClient.create().post().uri(url).retrieve().body(String::class.java)
     }
 }

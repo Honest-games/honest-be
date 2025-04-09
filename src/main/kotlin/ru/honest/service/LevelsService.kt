@@ -2,6 +2,7 @@ package ru.honest.service
 
 import org.springframework.stereotype.Service
 import ru.honest.controller.LevelOutput
+import ru.honest.exception.HonestEntityNotFound
 import ru.honest.mybatis.repo.LevelsRepo
 
 @Service
@@ -21,5 +22,12 @@ class LevelsService(
                 openedQuestionsCount = openedCardsByLevel[it.id]?.size ?: 0
             )
         }
+    }
+
+    fun shuffleLevel(clientId: String, levelId: String) {
+        val level = levelsRepo.getByParams(id = levelId).firstOrNull() ?: throw HonestEntityNotFound(
+            "Level $levelId not found"
+        )
+        usedQuestionsService.clearUsedQuestions(clientId, listOf(level.id))
     }
 }

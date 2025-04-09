@@ -76,7 +76,19 @@ class LevelsRepoTest(
                         },
                         { it.getByParams(decksIds = listOf("1", "3")) },
                     )
-                )
+                ),
+                Arguments.of(
+                    "id", TestCase(
+                        { it, _ ->
+                            listOf(
+                                TestCaseData(it.createLevel(id = "1"), true),
+                                TestCaseData(it.createLevel(id = "2"), false),
+                                TestCaseData(it.createLevel(id = "3"), false),
+                            )
+                        },
+                        { it.getByParams(id = "1") },
+                    )
+                ),
             )
         }
     }

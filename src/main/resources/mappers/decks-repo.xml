@@ -13,6 +13,9 @@
         <if test="promo != null">
             AND promo = #{promo}
         </if>
+        <if test="id != null">
+            AND id = #{id}
+        </if>
     </select>
 
     <select id="getCardsCounts">

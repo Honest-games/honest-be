@@ -54,19 +54,30 @@ class DecksRepoTest(
                         },
                         { it.getDecks(promo = "p1") },
                     )
-                )
+                ),
+                Arguments.of(
+                    "id", DecksTestCase(
+                        { it, _ ->
+                            listOf(
+                                DecksTestCaseData(it.createDeck("1", true), true),
+                                DecksTestCaseData(it.createDeck("2", true), false),
+                                DecksTestCaseData(it.createDeck("3", true), false),
+                            )
+                        },
+                        { it.getDecks(id = "1") },
+                    )
+                ),
             )
         }
     }
+    data class DecksTestCase(
+        val setup: (df: DecksFactory, f: LevelsFactory) -> List<DecksTestCaseData>,
+        val getData: (r: DecksRepo) -> List<DeckModel>
+    )
+
+    data class DecksTestCaseData(
+        val item: DeckModel,
+        val shouldBeReturned: Boolean,
+    )
+
 }
-
-
-data class DecksTestCase(
-    val setup: (df: DecksFactory, f: LevelsFactory) -> List<DecksTestCaseData>,
-    val getData: (r: DecksRepo) -> List<DeckModel>
-)
-
-data class DecksTestCaseData(
-    val item: DeckModel,
-    val shouldBeReturned: Boolean,
-)

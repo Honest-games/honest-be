@@ -1,10 +1,8 @@
 package ru.honest.controller
 
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import ru.honest.service.LevelsService
 
 @Tag(name = "default")
@@ -20,5 +18,14 @@ class LevelsController(
     ): List<LevelOutput> {
         val levelsByDeck = levelsService.getLevelsForMainPage(clientId, deckId)
         return levelsByDeck
+    }
+
+    @PostMapping("/{id}/shuffle")
+    fun shuffleLevel(
+        @RequestParam clientId: String,
+        @PathVariable id: String,
+    ): ResponseEntity<Any> {
+        levelsService.shuffleLevel(clientId, id)
+        return ResponseEntity.ok().build()
     }
 }

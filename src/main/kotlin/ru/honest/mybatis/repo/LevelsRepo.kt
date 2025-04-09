@@ -8,6 +8,7 @@ interface LevelsRepo {
     fun getLevelsByDeck(deckId: String): List<LevelModel>
     fun getByParams(
         decksIds: Collection<String>? = null,
+        id: String? = null,
     ): List<LevelModel>
     fun save(level: LevelModel)
     fun exists(levelId: String): Boolean

@@ -18,4 +18,8 @@ class UsedQuestionsService(
             questionsById[it.questionId]
         }.filterKeysNotNull().mapValues { it.value.filterNotNull() }
     }
+
+    fun clearUsedQuestions(clientId: String, levelsIds: Collection<String>) {
+        usedQuestionsRepo.clearUsedQuestions(levelsIds, clientId)
+    }
 }
