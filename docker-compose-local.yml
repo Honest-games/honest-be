@@ -3,7 +3,7 @@ name: honest-be
 
 services:
   honest-be:
-    image: ${IMAGE}
+    build: .
     container_name: honest-be
     restart: always
     environment:
