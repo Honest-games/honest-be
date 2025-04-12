@@ -1,0 +1,20 @@
+version: '3.8'
+name: honest-be
+
+services:
+  honest-be:
+    build: .
+    container_name: honest-be
+    restart: always
+    environment:
+      - PROFILES=${PROFILES}
+      - ADDITIONAL_PROFILES=docker
+      - CONFIG_SERVER_DOMAIN=${CONFIG_SERVER_DOMAIN}
+    ports:
+      - "8080:8080"
+    networks:
+      - dc-net
+
+networks:
+  dc-net:
+    external: true

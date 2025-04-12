@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.honest.service.DecksService
 
-@Tag(name = "default")
 @RestController
 @RequestMapping("/api/v1/decks")
 class DecksController(

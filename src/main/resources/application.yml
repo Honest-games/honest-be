@@ -8,14 +8,18 @@ logging:
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
+
 spring:
+  profiles:
+    active: ${PROFILES:}
+    include: ${ADDITIONAL_PROFILES}
   cloud:
     config:
       enabled: false
     compatibility-verifier:
       enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/honest
+    url: jdbc:postgresql://pg:5432/honest
     username: postgres
     password: 1234
     driver-class-name: org.postgresql.Driver
@@ -48,14 +52,16 @@ spring:
   config:
     activate:
       on-profile: local,test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/honest
 
 ---
 
 spring:
   config:
-    import: configserver:http://127.0.0.1:8888
+    import: configserver:${CONFIG_SERVER_DOMAIN}
     activate:
-      on-profile: prod,stage
+      on-profile: prod,stage,docker
   cloud:
     config:
       fail-fast: true
