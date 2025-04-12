@@ -10,8 +10,6 @@ services:
       - PROFILES=${PROFILES}
       - ADDITIONAL_PROFILES=docker
       - CONFIG_SERVER_DOMAIN=${CONFIG_SERVER_DOMAIN}
-    ports:
-      - "80:8080"
     networks:
       - dc-net
 

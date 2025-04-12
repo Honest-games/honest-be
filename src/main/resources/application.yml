@@ -66,3 +66,5 @@ spring:
     config:
       fail-fast: true
       enabled: true
+server:
+  port: 80
