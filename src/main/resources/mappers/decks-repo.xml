@@ -3,7 +3,14 @@
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace="ru.honest.mybatis.repo.DecksRepo">
     
-    <sql id="all">id, name, language_code, description, labels, vector_image_id, hidden, promo</sql>
+    <sql id="all">id, name, language_code, description, labels, vector_image_id, hidden, promo, bg_image_id,
+        modal_image_id
+    </sql>
+
+    <sql id="allFields">
+        #{id}, #{languageCode}, #{name}, #{description}, #{labels}, #{imageId}, #{hidden}, #{promo},
+        #{bgImageId}, #{modalImageId}
+    </sql>
     
     <select id="getDecks">
         SELECT
@@ -38,8 +45,7 @@
 
     <insert id="save">
         INSERT INTO decks
-        VALUES (#{id}, #{languageCode}, #{name},
-                #{description}, #{labels}, #{imageId}, #{hidden}, #{promo})
+        VALUES (<include refid="allFields"/>)
     </insert>
 
     <insert id="unlockDeck">

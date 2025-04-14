@@ -1,5 +1,6 @@
 package ru.honest.controller
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.model.QuestionModel
@@ -11,6 +12,8 @@ data class DeckOutput(
     val description: String?,
     val labels: List<String>,
     val imageId: String,
+    val bgImageId: String?,
+    val modalImageId: String?,
 ){
     companion object {
         fun create(deck: DeckModel): DeckOutput {
@@ -21,6 +24,8 @@ data class DeckOutput(
                 description = deck.description,
                 labels = deck.labels?.split(";") ?: emptyList(),
                 imageId = deck.imageId,
+                bgImageId = deck.bgImageId,
+                modalImageId = deck.modalImageId,
             )
         }
     }
@@ -52,8 +57,8 @@ data class LevelOutput(
     val order: Int,
     val name: String,
     val description: String?,
-    val color: String,
     val counts: LevelCountsOutput,
+    val backgroundColor: LevelBgColor
 ){
     companion object {
         fun create(
@@ -67,14 +72,35 @@ data class LevelOutput(
                 order = level.order,
                 name = level.name,
                 description = level.description,
-                color = level.color,
                 counts = LevelCountsOutput(
                     questionsCount = questionsCount,
                     openedQuestionsCount = openedQuestionsCount,
+                ),
+                backgroundColor = LevelBgColor(
+                    type = if (level.bgImageId != null) {
+                        LevelBgColorType.BACKGROUND_IMAGE
+                    } else {
+                        LevelBgColorType.COLOR
+                    },
+                    color = level.color.takeIf { level.bgImageId == null },
+                    imageId = level.bgImageId,
                 )
             )
         }
     }
+}
+
+data class LevelBgColor(
+    val type: LevelBgColorType,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val color: String? = null,
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    val imageId: String? = null,
+)
+
+enum class LevelBgColorType {
+    COLOR,
+    BACKGROUND_IMAGE,
 }
 
 data class LevelCountsOutput(

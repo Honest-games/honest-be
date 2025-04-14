@@ -8,9 +8,12 @@ import org.springframework.test.context.TestConstructor.AutowireMode.ALL
 import org.springframework.web.client.HttpClientErrorException.BadRequest
 import org.springframework.web.client.RestClient
 import ru.honest.BaseTest
+import ru.honest.controller.LevelBgColorType.BACKGROUND_IMAGE
+import ru.honest.controller.LevelBgColorType.COLOR
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
+import ru.honest.factory.VectorImageFactory
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -20,6 +23,7 @@ class LevelsControllerTest(
     private val questionsFactory: QuestionsFactory,
     private val questionsController: QuestionsController,
     private val levelsController: LevelsController,
+    private val vectorImageFactory: VectorImageFactory,
 ) : BaseTest() {
     @Test
     fun `without clientId - fail`() {
@@ -36,7 +40,7 @@ class LevelsControllerTest(
     }
 
     @Test
-    fun `success with clientId and deckId - gives correct num of decks`() {
+    fun `success with clientId and deckId - gives correct levels`() {
         val deck = decksFactory.createDeck()
         val expected = listOf(
             levelsFactory.createLevel(deck),
@@ -50,6 +54,25 @@ class LevelsControllerTest(
 
         val given = getLevels(clientId = "1", deckId = deck.id)
         assertEquals(expected, given)
+    }
+
+    @Test
+    fun `success with clientId and deckId - gives correct bg image data`() {
+        val deck = decksFactory.createDeck()
+        val bgImageId = "11"
+        val image = vectorImageFactory.createImage(bgImageId, "some 3")
+        val level = levelsFactory.createLevel(deck, bgImageId = bgImageId)
+        val level2 = levelsFactory.createLevel(deck)
+
+        val given = getLevels(clientId = "1", deckId = deck.id)
+        assertEquals(
+            LevelBgColor(BACKGROUND_IMAGE, imageId = bgImageId),
+            given[0].backgroundColor
+        )
+        assertEquals(
+            LevelBgColor(COLOR, color = level2.color),
+            given[1].backgroundColor
+        )
     }
 
     @Test

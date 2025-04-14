@@ -7,4 +7,5 @@ data class LevelModel(
     val name: String,
     val color: String,
     val description: String,
+    val bgImageId: String?,
 )

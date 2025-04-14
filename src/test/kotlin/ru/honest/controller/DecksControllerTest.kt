@@ -11,6 +11,8 @@ import ru.honest.BaseTest
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
+import ru.honest.factory.VectorImageFactory
+import ru.honest.mybatis.model.DeckModel
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -20,6 +22,7 @@ class DecksControllerTest(
     private val questionsFactory: QuestionsFactory,
     private val questionsController: QuestionsController,
     private val levelsController: LevelsController,
+    private val vectorImageFactory: VectorImageFactory,
 ): BaseTest() {
     @Test
     fun `without clientId - fail`() {
@@ -35,6 +38,38 @@ class DecksControllerTest(
         decksFactory.createDeck()
         val decks = getDecks("1")
         assertEquals(3, decks.size)
+    }
+
+    @Test
+    fun `success with clientId - gives correct deck data`() {
+        val bgImageId = "bg_1"
+        val modalImageId = "md_1"
+        vectorImageFactory.createImage(bgImageId, "some")
+        vectorImageFactory.createImage(modalImageId, "some2")
+
+        val deck = decksFactory.createDeck(DeckModel(
+            id = "1",
+            name = "name",
+            languageCode = "RUU",
+            description = "desc",
+            labels = "l1;l2",
+            imageId = "image_1",
+            hidden = false,
+            promo = null,
+            bgImageId = bgImageId,
+            modalImageId = modalImageId
+        ))
+        val decks = getDecks("1")
+        assertEquals(DeckOutput(
+            id = "1",
+            languageCode = "RUU",
+            name = "name",
+            description = "desc",
+            labels = listOf("l1", "l2"),
+            imageId = "image_1",
+            bgImageId = "bg_1",
+            modalImageId = "md_1"
+        ), decks[0])
     }
 
     @Test

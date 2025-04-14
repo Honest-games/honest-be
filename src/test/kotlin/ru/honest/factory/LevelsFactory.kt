@@ -15,6 +15,7 @@ class LevelsFactory(
     fun createLevel(
         deck: DeckModel? = null,
         id: String = num.toString(),
+        bgImageId: String? = null,
     ): LevelModel {
         val createdDeck = deck ?: decksFactory.createDeck()
         val level = LevelModel(
@@ -23,8 +24,14 @@ class LevelsFactory(
             order = num,
             name = "level $num",
             color = "0,0,0",
-            description = "desc $num"
+            description = "desc $num",
+            bgImageId = bgImageId,
         )
+        levelsRepo.save(level)
+        return level
+    }
+
+    fun createLevel(level: LevelModel): LevelModel {
         levelsRepo.save(level)
         return level
     }

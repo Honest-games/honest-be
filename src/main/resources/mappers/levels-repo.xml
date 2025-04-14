@@ -3,7 +3,9 @@
         'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 <mapper namespace="ru.honest.mybatis.repo.LevelsRepo">
 
-    <sql id="all">id, deck_id, level_order, name, color, description</sql>
+    <sql id="all">id, deck_id, level_order, name, color, description, bg_image_id</sql>
+
+    <sql id="allFields">#{id}, #{deckId}, #{order}, #{name}, #{color}, #{description}, #{bgImageId}</sql>
 
     <select id="getLevelsByDeck">
         SELECT <include refid="all"/>
@@ -29,8 +31,7 @@
     </select>
 
     <insert id="save">
-        INSERT INTO levels
-        VALUES (#{id}, #{deckId}, #{order}, #{name}, #{color}, #{description})
+        INSERT INTO levels VALUES (<include refid="allFields"/>)
     </insert>
 
     <select id="exists">

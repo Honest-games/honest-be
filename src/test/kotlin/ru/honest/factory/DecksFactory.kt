@@ -22,10 +22,15 @@ class DecksFactory(
             imageId = "image$num",
             hidden = hidden,
             promo = promo,
+            bgImageId = null,
+            modalImageId = null,
         )
         decksRepo.save(deck)
         return deck
     }
 
-    fun unlockDeck(clientId: String, deckId: String) = decksRepo.unlockDeck(clientId, deckId)
+    fun createDeck(deck: DeckModel): DeckModel {
+        decksRepo.save(deck)
+        return deck
+    }
 }

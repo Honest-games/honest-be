@@ -19,7 +19,7 @@ res += Array.from(document.querySelector('[data-block-id=de41a85a-3671-43a2-800a
     }).join(", ")
 
 res += ";"
-res += "INSERT INTO levels (id, deck_id, level_order, name, description, color) VALUES "
+res += "INSERT INTO levels (id, deck_id, level_order, name, description, color,bg_image_id) VALUES "
 
 res += Array.from(document.querySelectorAll('.notion-collection_view-block')[4]
     .querySelectorAll('.notion-table-view-row'))
@@ -33,7 +33,8 @@ res += Array.from(document.querySelectorAll('.notion-collection_view-block')[4]
         let name = cells[inc()];
         const desc = cells[inc()];
         let color = cells[inc()];
-        return `('${id}', '${deckId}', ${levelOrder}, '${name}', '${desc}', '${color}')`
+        let bgImageId = cells[inc()];
+        return `('${id}', '${deckId}', ${levelOrder}, '${name}', '${desc}', '${color}', ${bgImageId===""?null:`'${bgImageId}'`})`
     }).join(", ");
 
 res += ";"

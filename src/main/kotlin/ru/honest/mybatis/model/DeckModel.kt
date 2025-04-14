@@ -8,5 +8,7 @@ data class DeckModel(
     val labels: String?,
     val imageId: String,
     val hidden: Boolean,
-    val promo: String?
+    val promo: String?,
+    val bgImageId: String?,
+    val modalImageId: String?,
 )
