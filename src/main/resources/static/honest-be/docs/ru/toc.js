@@ -1,0 +1,1 @@
+window.__DATA__.data.toc = {"title":"Неочевидности апишки","href":"ru/index.html","navigation":{"logo":{"url":"https://github.com/","dark":{"icon":"logo.svg"},"light":{"icon":"logo.svg"}},"header":{"rightItems":[{"type":"controls"}]}},"items":[{"name":"/v1/levels","href":"ru/levels.html","id":"23fb8578-400a-4971-8106-4cf41ecc00ae"}],"id":"8ac1a83d-e9b4-43d3-9f7c-cf3125adea84"};

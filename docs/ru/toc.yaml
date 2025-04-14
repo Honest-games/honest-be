@@ -1,0 +1,17 @@
+title: Неочевидности апишки
+href: index.yaml
+
+navigation:
+  logo:
+    url: "https://github.com/"
+    dark:
+      icon: "logo.svg"
+    light:
+      icon: "logo.svg"
+  header:
+    rightItems:
+      - type: 'controls'
+
+items:
+  - name: /v1/levels
+    href: levels.md
