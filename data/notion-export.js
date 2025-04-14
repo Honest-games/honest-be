@@ -51,5 +51,5 @@ res += Array.from(document.querySelectorAll('.notion-collection_view-block')[8]
 res += "; COMMIT;"
 
 function processText(text) {
-    return text.replaceAll("'","\\'")
+    return text.replaceAll("'","''")
 }
