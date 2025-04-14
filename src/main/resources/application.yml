@@ -45,6 +45,7 @@ springdoc:
 
 honest:
   last-card-text: ${LAST_CARD_TEXT}
+  sub-path: /honest-be
 ---
 
 spring:

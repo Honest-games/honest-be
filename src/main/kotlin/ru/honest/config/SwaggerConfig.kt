@@ -3,14 +3,18 @@ package ru.honest.config
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
+import io.swagger.v3.oas.models.servers.Server
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 class SwaggerConfig {
     @Bean
-    fun swaggerOpenApiConfig(): OpenAPI {
+    fun swaggerOpenApiConfig(honestProps: HonestProps): OpenAPI {
         return OpenAPI()
+            .servers(listOf(
+                Server().url(honestProps.subPath).description("Honest backend"),
+            ))
             .info(
                 Info()
                     .title("Honest API")
