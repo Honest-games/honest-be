@@ -8,10 +8,10 @@ services:
     restart: always
     environment:
       - PROFILES=${PROFILES}
-      - ADDITIONAL_PROFILES=docker
+      - ADDITIONAL_PROFILES=docker,local-dc
       - CONFIG_SERVER_DOMAIN=${CONFIG_SERVER_DOMAIN}
-    ports:
-      - "8080:8080"
+      - DB_USER=postgres
+      - DB_PASSWORD=1234
     networks:
       - dc-net
 

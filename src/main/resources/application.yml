@@ -42,7 +42,6 @@ springdoc:
     path: /api-docs
   swagger-ui:
     enabled: true
-    path: /swagger
 
 honest:
   last-card-text: ${LAST_CARD_TEXT}
@@ -66,5 +65,11 @@ spring:
     config:
       fail-fast: true
       enabled: true
+
 server:
   port: 80
+
+springdoc:
+  swagger-ui:
+    url: /honest-be/api-docs
+    config-url: /honest-be/api-docs/swagger-config
