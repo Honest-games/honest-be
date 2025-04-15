@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Diplodoc" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="yfm -i ./docs -o ./src/main/resources/static/honest-be/docs" />
+    <option name="SCRIPT_TEXT" value="yfm -i ./docs -o ./src/main/resources/static/docs" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />
