@@ -15,3 +15,5 @@ navigation:
 items:
   - name: Фоны колод и уровней
     href: bg.md
+  - name: Нейро колоды
+    href: ai_decks.md
