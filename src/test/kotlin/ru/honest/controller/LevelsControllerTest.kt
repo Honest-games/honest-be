@@ -8,8 +8,6 @@ import org.springframework.test.context.TestConstructor.AutowireMode.ALL
 import org.springframework.web.client.HttpClientErrorException.BadRequest
 import org.springframework.web.client.RestClient
 import ru.honest.BaseTest
-import ru.honest.controller.LevelBgColorType.BACKGROUND_IMAGE
-import ru.honest.controller.LevelBgColorType.COLOR
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
@@ -65,14 +63,8 @@ class LevelsControllerTest(
         val level2 = levelsFactory.createLevel(deck)
 
         val given = getLevels(clientId = "1", deckId = deck.id)
-        assertEquals(
-            LevelBgColor(BACKGROUND_IMAGE, imageId = bgImageId),
-            given[0].backgroundColor
-        )
-        assertEquals(
-            LevelBgColor(COLOR, color = level2.color),
-            given[1].backgroundColor
-        )
+        assertEquals(level.bgImageId, given[0].cardBackgroundImageId)
+        assertEquals(level2.color, given[1].color)
     }
 
     @Test

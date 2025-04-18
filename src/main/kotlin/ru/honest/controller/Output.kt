@@ -1,6 +1,5 @@
 package ru.honest.controller
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.model.QuestionModel
@@ -58,7 +57,8 @@ data class LevelOutput(
     val name: String,
     val description: String?,
     val counts: LevelCountsOutput,
-    val backgroundColor: LevelBgColor
+    val color: String,
+    val cardBackgroundImageId: String?
 ){
     companion object {
         fun create(
@@ -76,31 +76,11 @@ data class LevelOutput(
                     questionsCount = questionsCount,
                     openedQuestionsCount = openedQuestionsCount,
                 ),
-                backgroundColor = LevelBgColor(
-                    type = if (level.bgImageId != null) {
-                        LevelBgColorType.BACKGROUND_IMAGE
-                    } else {
-                        LevelBgColorType.COLOR
-                    },
-                    color = level.color.takeIf { level.bgImageId == null },
-                    imageId = level.bgImageId,
-                )
+                color = level.color,
+                cardBackgroundImageId = level.bgImageId,
             )
         }
     }
-}
-
-data class LevelBgColor(
-    val type: LevelBgColorType,
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val color: String? = null,
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    val imageId: String? = null,
-)
-
-enum class LevelBgColorType {
-    COLOR,
-    BACKGROUND_IMAGE,
 }
 
 data class LevelCountsOutput(
