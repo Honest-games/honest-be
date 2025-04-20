@@ -1,6 +1,6 @@
 let res = "START TRANSACTION; TRUNCATE TABLE questions; TRUNCATE TABLE levels; TRUNCATE TABLE decks;"
 
-res += "INSERT INTO decks (id, language_code, name, description, labels, vector_image_id, hidden, promo) VALUES ";
+res += "INSERT INTO decks (id, language_code, name, description, labels, vector_image_id, hidden, promo, deck_order) VALUES ";
 
 res += Array.from(document.querySelector('[data-block-id=de41a85a-3671-43a2-800a-1ce43ef93c59]')
     .querySelectorAll('.notion-table-view-row'))
@@ -13,9 +13,11 @@ res += Array.from(document.querySelector('[data-block-id=de41a85a-3671-43a2-800a
         let name = cells[inc()]
         const desc = cells[inc()]
         const promo = cellsObjs[inc()].innerText
+        const promoValue = promo ? `'${promo}'` : 'null'
         const imageId = cells[inc()]
         const labels = cellsObjs[inc()].innerText
-        return `('${id}', '${lang.substring(0,2).toUpperCase()}', '${name}', '${desc}', '${labels}', '${imageId}', ${promo ? "true" : "false"}, ${promo ? `'${promo}'` : 'null'})`
+        const order = cells[inc()]
+        return `('${id}', '${lang.substring(0,2).toUpperCase()}', '${name}', '${desc}', '${labels}', '${imageId}', ${promo ? "true" : "false"}, ${promoValue}, ${order})`
     }).join(", ")
 
 res += ";"

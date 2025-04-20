@@ -80,7 +80,7 @@ class DecksControllerTest(
             description = "desc",
             labels = listOf("l1", "l2"),
             imageId = "image_1",
-            bgImageId = "bg_1",
+            backgroundImageId = "bg_1",
             modalImageId = "md_1"
         ), decks[0])
     }

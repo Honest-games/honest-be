@@ -3,7 +3,7 @@ href: index.yaml
 
 navigation:
   logo:
-    url: "https://github.com/"
+    url: "https://logotipiwe.ru/honest-be/swagger-ui/index.html"
     dark:
       icon: "logo.svg"
     light:
@@ -13,5 +13,5 @@ navigation:
       - type: 'controls'
 
 items:
-  - name: /v1/levels
-    href: levels.md
+  - name: Фоны колод и уровней
+    href: bg.md

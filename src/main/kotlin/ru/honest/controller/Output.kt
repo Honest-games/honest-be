@@ -11,7 +11,7 @@ data class DeckOutput(
     val description: String?,
     val labels: List<String>,
     val imageId: String,
-    val bgImageId: String?,
+    val backgroundImageId: String?,
     val modalImageId: String?,
 ){
     companion object {
@@ -23,7 +23,7 @@ data class DeckOutput(
                 description = deck.description,
                 labels = deck.labels?.split(";") ?: emptyList(),
                 imageId = deck.imageId,
-                bgImageId = deck.bgImageId,
+                backgroundImageId = deck.bgImageId,
                 modalImageId = deck.modalImageId,
             )
         }
