@@ -16,6 +16,7 @@ class DecksService(
         val unlockedDecks = decksRepo.getUnlockedDecksIds(clientId).toSet()
         val decksToReturn = decksRepo.getDecks()
             .filter { !it.hidden || unlockedDecks.contains(it.id) }
+            .sortedBy { it.order }
 
         return decksToReturn.map { DeckOutput.create(it) }
     }

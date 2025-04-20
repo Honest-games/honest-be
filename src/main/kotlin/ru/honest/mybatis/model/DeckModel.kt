@@ -11,4 +11,5 @@ data class DeckModel(
     val promo: String?,
     val bgImageId: String?,
     val modalImageId: String?,
+    val order: Int,
 )

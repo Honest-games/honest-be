@@ -41,6 +41,18 @@ class DecksControllerTest(
     }
 
     @Test
+    fun `success with clientId - order correct`() {
+        val deck3 = decksFactory.createDeck(order = 3)
+        val deck1 = decksFactory.createDeck(order = 1)
+        val deck2 = decksFactory.createDeck(order = 2)
+        val decks = getDecks("1")
+
+        assertEquals(deck1.id, decks[0].id)
+        assertEquals(deck2.id, decks[1].id)
+        assertEquals(deck3.id, decks[2].id)
+    }
+
+    @Test
     fun `success with clientId - gives correct deck data`() {
         val bgImageId = "bg_1"
         val modalImageId = "md_1"
@@ -57,7 +69,8 @@ class DecksControllerTest(
             hidden = false,
             promo = null,
             bgImageId = bgImageId,
-            modalImageId = modalImageId
+            modalImageId = modalImageId,
+            order = 1,
         ))
         val decks = getDecks("1")
         assertEquals(DeckOutput(

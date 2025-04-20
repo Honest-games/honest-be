@@ -12,6 +12,7 @@ class DecksFactory(
         id: String? = null,
         hidden: Boolean = false,
         promo: String? = null,
+        order: Int = 1,
     ): DeckModel {
         val deck = DeckModel(
             id = id ?: num.toString(),
@@ -24,6 +25,7 @@ class DecksFactory(
             promo = promo,
             bgImageId = null,
             modalImageId = null,
+            order = order,
         )
         decksRepo.save(deck)
         return deck

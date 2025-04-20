@@ -4,12 +4,12 @@
 <mapper namespace="ru.honest.mybatis.repo.DecksRepo">
     
     <sql id="all">id, name, language_code, description, labels, vector_image_id, hidden, promo, bg_image_id,
-        modal_image_id
+        modal_image_id, deck_order
     </sql>
 
     <sql id="allFields">
         #{id}, #{languageCode}, #{name}, #{description}, #{labels}, #{imageId}, #{hidden}, #{promo},
-        #{bgImageId}, #{modalImageId}
+        #{bgImageId}, #{modalImageId}, #{order}
     </sql>
     
     <select id="getDecks">
