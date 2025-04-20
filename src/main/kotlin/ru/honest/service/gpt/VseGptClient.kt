@@ -1,28 +1,34 @@
 package ru.honest.service.gpt
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Primary
+import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClient.ResponseSpec
 
 @Component
+@Profile("gpt.vse")
+@Primary
 class VseGptClient: GptClient {
     @Value("\${gpt.api-key}")
     private lateinit var apiKey: String
 
-    override fun chatCompletion(model: GptModel, messages: List<ChatMessage>): Any {
-        val body = ChatRequest(model = model.modelName, messages = messages)
+    override fun chatCompletion(model: String, messages: List<ChatMessage>): Any {
+        val body = ChatRequest(model = model, messages = messages)
 
-        val response = restClient().post()
+        val retrieve = restClient().post()
             .uri("/chat/completions")
             .body(body)
             .retrieve()
-            .handleGptErrors()
-            .body(ChatResponse::class.java)!!
+        val status = retrieve.toEntity(String::class.java)
+//        val response = retrieve
+//            .handleGptErrors()
+//            .body(ChatResponse::class.java)!!
+//            .body(String::class.java)!!
 
-        return response
+        return status
     }
 
     private fun restClient(): RestClient {
@@ -56,57 +62,5 @@ class VseGptClient: GptClient {
                 val msg = response.body.toString()
                 throw GptClientErrorException("Client Error: $msg")
             }
-    }
-
-
-    class GptRateLimitException(message: String?) : RuntimeException(message)
-    class GptServerErrorException(message: String?) : RuntimeException(message)
-    class GptUnauthorizedException(message: String?) : RuntimeException(message)
-    class GptClientErrorException(message: String?) : RuntimeException(message)
-
-    data class ChatMessage(val role: String, val content: Any)
-
-    data class ChatRequest(
-        val model: String,
-        val messages: List<ChatMessage>,
-        val temperature: Double = 0.7,
-        @JsonProperty("max_tokens")
-        val maxTokens: Int = 1000,
-        val n: Int = 1
-    )
-
-    data class ChatResponse(
-        val id: String,
-        val created: Long,
-        val model: String,
-        val choices: List<Choice>,
-        val usage: Usage?
-    )
-
-    data class Choice(
-        val index: Int,
-        val message: Message,
-        @JsonProperty("finish_reason")
-        val finishReason: String
-    )
-
-    data class Message(
-        val role: String,
-        val content: String
-    )
-
-    data class Usage(
-        @JsonProperty("prompt_tokens")
-        val promptTokens: Int,
-        @JsonProperty("completion_tokens")
-        val completionTokens: Int,
-        @JsonProperty("total_tokens")
-        val totalTokens: Int
-    )
-
-    enum class GptModel(val modelName: String) {
-        GPT_3_5_TURBO("gpt-3.5-turbo"),
-        GPT_4("gpt-4"),
-        GPT_4_32K("gpt-4-32k");
     }
 }

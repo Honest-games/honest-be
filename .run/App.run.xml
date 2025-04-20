@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="ACTIVE_PROFILES" value="local,gpt.vse" />
     <additionalParameters>
       <param>
         <option name="enabled" value="true" />
@@ -8,6 +8,9 @@
         <option name="value" value="when_authorized" />
       </param>
     </additionalParameters>
+    <envs>
+      <env name="GPT_API_KEY" value="sk-or-vv-38440b0657581620605e98b83b7f813a1ad7e21a7549ffbac74aa10371b9f9b1" />
+    </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="honest-be" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ru.honest.App" />

@@ -1,15 +1,18 @@
 package ru.honest.controller
 
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.honest.service.DecksService
+import ru.honest.service.gpt.ChatMessage
+import ru.honest.service.gpt.GptChatRole
+import ru.honest.service.gpt.GptClient
 
 @RestController
 @RequestMapping("/api/v1/decks")
 class DecksController(
-    private val decksService: DecksService
+    private val decksService: DecksService,
+    private val gptClient: GptClient,
 ) {
     @GetMapping
     @Operation(summary = "Get all decks (WITHOUT LANGUAGE PARAM NOW)")
@@ -27,5 +30,16 @@ class DecksController(
     ): ResponseEntity<Any> {
         decksService.shuffleDeck(clientId, id)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/ai")
+    fun ai(
+        @RequestParam model: String,
+        @RequestParam prompt: String,
+    ): ResponseEntity<Any> {
+        return ResponseEntity.ok(gptClient.chatCompletion(
+            model,
+            listOf(ChatMessage(GptChatRole.USER, prompt))
+        ))
     }
 }

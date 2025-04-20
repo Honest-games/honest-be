@@ -1,10 +1,11 @@
 package ru.honest
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.TestConstructor
+import org.springframework.test.context.TestConstructor.AutowireMode.ALL
 
-@SpringBootTest
-class AppTests {
+@TestConstructor(autowireMode = ALL)
+class AppTests: BaseTest() {
 
     @Test
     fun contextLoads() {
