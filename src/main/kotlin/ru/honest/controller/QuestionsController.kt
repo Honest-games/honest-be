@@ -17,8 +17,9 @@ class QuestionsController(
     fun getRandomQuestion(
         @RequestParam levelId: String,
         @RequestParam clientId: String,
+        @RequestParam ai: Boolean = false,
     ): QuestionOutput {
-        val answer = questionsService.readRandomQuestion(levelId, clientId)
+        val answer = questionsService.getQuestion(levelId, clientId, ai)
         return QuestionOutput.create(answer.question, answer.isLast)
     }
 }

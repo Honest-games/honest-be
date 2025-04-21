@@ -67,6 +67,20 @@ class DecksRepoTest(
                         { it.getDecks(id = "1") },
                     )
                 ),
+                Arguments.of(
+                    "levelId", DecksTestCase(
+                        { it, l ->
+                            val decks = listOf(
+                                DecksTestCaseData(it.createDeck("1"), false),
+                                DecksTestCaseData(it.createDeck("3"), true),
+                            )
+                            l.createLevel(id = "l2", deck = decks[0].item)
+                            l.createLevel(id = "l1", deck = decks[1].item)
+                            decks
+                        },
+                        { it.getDecks(levelId = "l1") },
+                    )
+                ),
             )
         }
     }

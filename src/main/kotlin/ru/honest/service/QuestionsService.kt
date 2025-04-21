@@ -6,15 +6,12 @@ import ru.honest.config.HonestProps
 import ru.honest.exception.HonestEntityNotFound
 import ru.honest.filterKeysNotNull
 import ru.honest.mybatis.model.LevelModel
-import ru.honest.mybatis.model.QuestionHistoryModel
-import ru.honest.mybatis.model.UsedQuestion
 import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.repo.LevelsRepo
 import ru.honest.mybatis.repo.QuestionsHistoryRepo
 import ru.honest.mybatis.repo.QuestionsRepo
 import ru.honest.mybatis.repo.UsedQuestionsRepo
-import java.time.LocalDateTime
-import java.util.UUID
+import ru.honest.service.question.GetQuestionStrategy
 
 @Service
 class QuestionsService(
@@ -22,40 +19,26 @@ class QuestionsService(
     private val usedQuestionsRepo: UsedQuestionsRepo,
     private val questionsHistoryRepo: QuestionsHistoryRepo,
     private val honestProps: HonestProps,
-    private val levelsRepo: LevelsRepo
+    private val levelsRepo: LevelsRepo,
+    private val getQuestionStrategies: List<GetQuestionStrategy>
 ) {
     @Transactional
-    fun readRandomQuestion(
+    fun getQuestion(
         levelId: String,
         clientId: String,
-    ): GetRandQuestionAnswer {
-        if(!levelsRepo.exists(levelId)) {
+        aiGen: Boolean = false,
+    ): GetQuestionAnswer {
+        if (!levelsRepo.exists(levelId)) {
             throw HonestEntityNotFound("Level $levelId not found")
         }
-        val usedLevelQuestions = usedQuestionsRepo.getUsedQuestions(clientId, setOf(levelId))
-        val questions = questionsRepo.getQuestionsByLevel(levelId)
-        val notUsedQuestions = (
-                questions.associateBy { it.id } - usedLevelQuestions.map { it.questionId }.toSet())
-            .values
-        if (notUsedQuestions.isEmpty()) {
-            usedQuestionsRepo.clearUsedQuestions(setOf(levelId), clientId)
-            return GetRandQuestionAnswer(QuestionModel(
-                id = "-1",
-                levelId = levelId,
-                text = honestProps.lastCardText,
-                additionalTest = null
-            ), true)
+        getQuestionStrategies.forEach { getQuestionStrategy ->
+            with(getQuestionStrategy){
+                if (shouldBeUsed(levelId, clientId, aiGen)) {
+                    return getQuestion(levelId, clientId, aiGen)
+                }
+            }
         }
-        val question = notUsedQuestions.random()
-        usedQuestionsRepo.save(UsedQuestion(question.id, clientId))
-        questionsHistoryRepo.save(QuestionHistoryModel(
-            id = UUID.randomUUID().toString(),
-            levelId = levelId,
-            questionId = question.id,
-            clientId = clientId,
-            time = LocalDateTime.now()
-        ))
-        return GetRandQuestionAnswer(question, false)
+        throw IllegalStateException("Question strategy not found for level $levelId and client $clientId")
     }
 
     fun getQuestionsByLevel(levels: List<LevelModel>): Map<LevelModel, List<QuestionModel>>{
@@ -65,7 +48,7 @@ class QuestionsService(
         }.filterKeysNotNull()
     }
 
-    data class GetRandQuestionAnswer(
+    data class GetQuestionAnswer(
         val question: QuestionModel,
         val isLast: Boolean,
     )

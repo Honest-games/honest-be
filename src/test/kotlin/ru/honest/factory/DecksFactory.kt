@@ -1,6 +1,7 @@
 package ru.honest.factory
 
 import org.springframework.stereotype.Component
+import ru.honest.mybatis.model.DeckAiType
 import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.repo.DecksRepo
 
@@ -26,6 +27,7 @@ class DecksFactory(
             bgImageId = null,
             modalImageId = null,
             order = order,
+            aiType = DeckAiType.NON_AI,
         )
         decksRepo.save(deck)
         return deck

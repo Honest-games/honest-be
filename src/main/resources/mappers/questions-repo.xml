@@ -13,7 +13,7 @@
 
     <insert id="save">
         INSERT INTO questions
-        VALUES (#{id}, #{levelId}, #{text}, #{additionalTest})
+        VALUES (#{id}, #{levelId}, #{text}, #{additionalText})
     </insert>
 
     <select id="getByParams">

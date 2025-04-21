@@ -9,6 +9,7 @@ interface DecksRepo {
     fun getDecks(
         promo: String? = null,
         id: String? = null,
+        levelId: String? = null,
     ): List<DeckModel>
     fun getCardsCounts(decksIds: List<String>): List<DeckCardsCount> = listOf()
     fun getUnlockedDecksIds(clientId: String): List<String>

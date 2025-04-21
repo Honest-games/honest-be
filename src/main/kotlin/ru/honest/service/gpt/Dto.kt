@@ -1,6 +1,7 @@
 package ru.honest.service.gpt
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonValue
 
 class GptRateLimitException(
     override val message: String,
@@ -24,10 +25,10 @@ data class ChatMessage(val role: GptChatRole, val content: Any)
 data class ChatRequest(
     val model: String,
     val messages: List<ChatMessage>,
-    val temperature: Double = 0.7,
-    @JsonProperty("max_tokens")
-    val maxTokens: Int = 1000,
-    val n: Int = 1
+//    val temperature: Double = 0.7,
+//    @JsonProperty("max_tokens")
+//    val maxTokens: Int = 1000,
+//    val n: Int = 1
 )
 
 data class ChatResponse(
@@ -56,7 +57,9 @@ data class Usage(
     @JsonProperty("completion_tokens")
     val completionTokens: Int,
     @JsonProperty("total_tokens")
-    val totalTokens: Int
+    val totalTokens: Int,
+    @JsonProperty("total_cost")
+    val totalCost: Double,
 )
 
 enum class GptModel(val modelName: String) {
@@ -79,5 +82,6 @@ enum class GptChatRole(private val value: String) {
     USER("user"),
     ASSISTANT("assistant"),
     ;
+    @JsonValue
     override fun toString(): String = value
 }

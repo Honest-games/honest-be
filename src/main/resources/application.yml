@@ -49,6 +49,7 @@ honest:
 
 gpt:
   api-key: ${GPT_API_KEY}
+  model: ${GPT_MODEL}
 ---
 
 spring:
@@ -57,6 +58,9 @@ spring:
       on-profile: local,test
   datasource:
     url: jdbc:postgresql://localhost:5432/honest
+
+honest:
+  sub-path: /
 
 ---
 
