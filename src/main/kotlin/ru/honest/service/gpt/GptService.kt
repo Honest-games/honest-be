@@ -20,7 +20,7 @@ class GptService(
             return response.choices.firstOrNull()?.message?.content ?: throw IllegalStateException("Empty gpt response")
         } catch (e: Exception) {
             logger.error(e.message, e)
-            return "Ошибка при генерации вопроса, попробуйте позже"
+            return honestProps.gptQuestionErrorMessage
         }
     }
 

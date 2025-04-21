@@ -47,7 +47,9 @@ honest:
   last-card-text: ${LAST_CARD_TEXT}
   sub-path: /honest-be
   gpt:
-    question-request-prefix: ${GPT_QUESTION_REQUEST_PREFIX:Напиши вопрос, похожий по теме на эти вопросы, но не повторяющий ни один из них:\n}
+    questions-gen:
+      request-prefix: ${GPT_QUESTION_REQUEST_PREFIX:Напиши вопрос, похожий по теме на эти вопросы, но не повторяющий ни один из них:\n}
+      error-message: ${GPT_QUESTION_ERROR_MESSAGE:Не удалось сгенерировать вопрос. Попробуйте еще раз.}
 
 gpt:
   api-key: ${GPT_API_KEY}
