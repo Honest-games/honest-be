@@ -2,15 +2,16 @@ package ru.honest.service.gpt
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import ru.honest.config.HonestProps
 import ru.honest.mybatis.model.QuestionModel
 
 @Service
 class GptService(
     private val gptClient: GptClient,
+    private val honestProps: HonestProps,
 ) {
     fun createQuestionFromSimilar(similarQuestions: List<QuestionModel>): String {
-        val promptPrefix = "Напиши вопрос, похожий по теме на эти вопросы, но не повторяющий ни один из них:\n"
-        val question = "$promptPrefix ${similarQuestions.joinToString(";\n ") {it.text}} "
+        val question = "${honestProps.gptQuestionRequestPrefix} ${similarQuestions.joinToString(";\n ") { it.text }} "
         val messages = listOf(
             ChatMessage(role = GptChatRole.USER, content = question),
         )

@@ -46,6 +46,8 @@ springdoc:
 honest:
   last-card-text: ${LAST_CARD_TEXT}
   sub-path: /honest-be
+  gpt:
+    question-request-prefix: ${GPT_QUESTION_REQUEST_PREFIX:Напиши вопрос, похожий по теме на эти вопросы, но не повторяющий ни один из них:\n}
 
 gpt:
   api-key: ${GPT_API_KEY}
