@@ -1,0 +1,192 @@
+/* Стили для лендинга "Честно" с точным соответствием макету */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff3e9;
+    color: #2d2d2d;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #fff3e9;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #c6561a;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #2d2d2d;
+    font-size: 1rem;
+}
+
+section {
+    width: 900px;
+    margin: auto;
+}
+
+.hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 40px;
+    background-color: #fff3e9;
+}
+
+.hero-text {
+    max-width: 50%;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #c6561a;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero button {
+    background-color: #a8431e;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.hero img {
+    max-width: 400px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.brand-idea h2,
+.deck-section h2,
+.openness-levels h3 {
+    color: #a8431e;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.brand-idea p,
+.deck-section p,
+.openness-levels p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.brand-idea {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-left: 10%;
+    margin-bottom: 150px;
+}
+
+.brand-idea img {
+    z-index: -2;
+    position: absolute;
+    left: 0;
+    width: 40%;
+}
+
+.people2 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.people2 img {
+    border-radius: 40%;
+    width: 80%;
+    margin: auto;
+}
+
+.deck-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding-right: 270px;
+    margin-bottom: 200px;
+}
+
+.deck-section img {
+    position: absolute;
+    right: -15%;
+    /* scale: 1.4; */
+    width: 50%;
+    object-fit: contain;
+    /* height: 551px; */
+    /* object-position: bottom; */
+    z-index: -2;
+    max-height: 700px;
+}
+
+.openness-levels h3 {
+    font-size: 1.3rem;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff3e9;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .hero,
+    .brand-idea,
+    .deck-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p,
+    .brand-idea p,
+    .deck-section p {
+        font-size: 0.95rem;
+    }
+
+    .hero button {
+        padding: 10px 20px;
+    }
+}
