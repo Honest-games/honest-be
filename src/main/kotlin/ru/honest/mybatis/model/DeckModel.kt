@@ -12,4 +12,9 @@ data class DeckModel(
     val bgImageId: String?,
     val modalImageId: String?,
     val order: Int,
-)
+    val aiType: DeckAiType,
+){
+    fun isAiOnly() = aiType == DeckAiType.AI_ONLY
+    fun isAiExtended() = aiType == DeckAiType.AI_EXTENDED
+    fun isNonAi() = aiType == DeckAiType.NON_AI
+}

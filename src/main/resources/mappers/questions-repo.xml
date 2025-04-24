@@ -13,7 +13,7 @@
 
     <insert id="save">
         INSERT INTO questions
-        VALUES (#{id}, #{levelId}, #{text}, #{additionalTest})
+        VALUES (#{id}, #{levelId}, #{text}, #{additionalText})
     </insert>
 
     <select id="getByParams">
@@ -29,4 +29,20 @@
             </choose>
         </if>
     </select>
+
+    <select id="getAlreadyAiGeneratedQuestions">
+        SELECT question_text
+        FROM ai_generated_questions_history
+        WHERE level_id = #{levelId}
+            AND client_id = #{clientId}
+            AND NOT deleted
+        ORDER by created_at DESC
+        LIMIT 50
+    </select>
+
+    <insert id="addAiGeneratedQuestionToHistory">
+        INSERT INTO ai_generated_questions_history
+        (question_text, level_id, client_id)
+        VALUES (#{questionText}, #{levelId}, #{clientId})
+    </insert>
 </mapper>

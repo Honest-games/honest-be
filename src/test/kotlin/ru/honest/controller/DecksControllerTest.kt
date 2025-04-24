@@ -12,6 +12,7 @@ import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
 import ru.honest.factory.VectorImageFactory
+import ru.honest.mybatis.model.DeckAiType
 import ru.honest.mybatis.model.DeckModel
 import kotlin.test.assertEquals
 
@@ -71,6 +72,7 @@ class DecksControllerTest(
             bgImageId = bgImageId,
             modalImageId = modalImageId,
             order = 1,
+            aiType = DeckAiType.NON_AI,
         ))
         val decks = getDecks("1")
         assertEquals(DeckOutput(
@@ -81,7 +83,8 @@ class DecksControllerTest(
             labels = listOf("l1", "l2"),
             imageId = "image_1",
             backgroundImageId = "bg_1",
-            modalImageId = "md_1"
+            modalImageId = "md_1",
+            aiType = DeckAiType.NON_AI,
         ), decks[0])
     }
 

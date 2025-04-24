@@ -22,7 +22,7 @@ class QuestionsFactory(
             id = UUID.randomUUID().toString(),
             levelId = level.id,
             text = "text $num",
-            additionalTest = null,
+            additionalText = null,
         )
         questionsRepo.save(q)
         return q

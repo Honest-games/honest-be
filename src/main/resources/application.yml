@@ -46,6 +46,15 @@ springdoc:
 honest:
   last-card-text: ${LAST_CARD_TEXT}
   sub-path: /honest-be
+  gpt:
+    questions-gen:
+      request-prefix: ${GPT_QUESTION_PREFIX}
+      error-message: ${GPT_QUESTION_ERROR_MESSAGE}
+      system-message: ${GPT_SYSTEM_MESSAGE}
+
+gpt:
+  api-key: ${GPT_API_KEY}
+  model: ${GPT_MODEL}
 ---
 
 spring:
@@ -54,6 +63,9 @@ spring:
       on-profile: local,test
   datasource:
     url: jdbc:postgresql://localhost:5432/honest
+
+honest:
+  sub-path: /
 
 ---
 

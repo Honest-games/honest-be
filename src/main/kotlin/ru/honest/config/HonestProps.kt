@@ -9,4 +9,10 @@ data class HonestProps(
     val lastCardText: String,
     @Value("\${honest.sub-path}")
     val subPath: String,
+    @Value("\${honest.gpt.questions-gen.request-prefix}")
+    val gptQuestionRequestPrefix: String,
+    @Value("\${honest.gpt.questions-gen.error-message}")
+    val gptQuestionErrorMessage: String,
+    @Value("\${honest.gpt.questions-gen.system-message}")
+    val gptSystemMessage: String
 )

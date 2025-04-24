@@ -4,5 +4,5 @@ data class QuestionModel(
     val id: String,
     val levelId: String,
     val text: String,
-    val additionalTest: String?,
+    val additionalText: String?,
 )

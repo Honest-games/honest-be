@@ -14,5 +14,16 @@ interface QuestionsRepo {
     fun getByParams(
         levelsIds: List<String>? = null
     ): List<QuestionModel>
+
+    fun getAlreadyAiGeneratedQuestions(
+        levelId: String,
+        clientId: String
+    ): List<String>
+
+    fun addAiGeneratedQuestionToHistory(
+        questionText: String,
+        levelId: String,
+        clientId: String
+    )
 }
 
