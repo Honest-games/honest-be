@@ -13,4 +13,6 @@ data class HonestProps(
     val gptQuestionRequestPrefix: String,
     @Value("\${honest.gpt.questions-gen.error-message}")
     val gptQuestionErrorMessage: String,
+    @Value("\${honest.gpt.questions-gen.system-message}")
+    val gptSystemMessage: String
 )

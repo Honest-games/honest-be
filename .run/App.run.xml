@@ -12,6 +12,7 @@
       <env name="GPT_API_KEY" value="sk-or-vv-38440b0657581620605e98b83b7f813a1ad7e21a7549ffbac74aa10371b9f9b1" />
       <env name="GPT_MODEL" value="openai/gpt-4.1-nano" />
       <env name="logging.level.root" value="INFO" />
+      <env name="HONEST_GPT_QUESTION_GEN_REQUEST_PREFIX" value="Напиши вопрос который угарает над данными вопросами" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="honest-be" />
