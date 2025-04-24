@@ -1,7 +1,12 @@
 package ru.honest.controller
 
-import org.junit.jupiter.api.Assertions.*
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode.ALL
 import org.springframework.web.client.RestClient
@@ -10,7 +15,9 @@ import ru.honest.config.HonestProps
 import ru.honest.factory.DecksFactory
 import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
+import ru.honest.mybatis.model.DeckAiType
 import ru.honest.mybatis.repo.QuestionsHistoryRepo
+import ru.honest.service.gpt.GptClientStub
 import kotlin.test.assertEquals
 
 @TestConstructor(autowireMode = ALL)
@@ -21,6 +28,7 @@ class QuestionsControllerTest(
     private val questionsFactory: QuestionsFactory,
     private val honestProps: HonestProps,
     private val historyRepo: QuestionsHistoryRepo,
+    private val gptClientStub: GptClientStub,
 ) : BaseTest() {
     @Test
     fun `returns random questions and last card for many clients`() {
@@ -118,19 +126,60 @@ class QuestionsControllerTest(
         assertEquals("Level $levelId not found", answer.body!!.error)
     }
 
+    @ParameterizedTest
+    @MethodSource("provideAiTestCases")
+    fun `getRandomQuestion - gets expected ai or non ai question`(
+        aiType: DeckAiType,
+        useAi: Boolean,
+        isAiQuestionExpected: Boolean
+    ) {
+        val deck = decksFactory.createDeck(aiType = aiType)
+        val level = levelsFactory.createLevel(deck)
+        val question = questionsFactory.createQuestion(level)
+        val aiQuestion = "stubbed text"
+        gptClientStub.setStubResponse(aiQuestion)
+
+        val answer = getRandQuestion("clientId", question.levelId, useAi)
+        if (isAiQuestionExpected) {
+            answer.text shouldBe aiQuestion
+        } else {
+            answer.text shouldBe question.text
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun provideAiTestCases() = listOf(
+            AiTestCase(DeckAiType.NON_AI, useAi = false, isAiQuestionExpected = false),
+            AiTestCase(DeckAiType.NON_AI, useAi = true, isAiQuestionExpected = false),
+            AiTestCase(DeckAiType.AI_EXTENDED, useAi = true, isAiQuestionExpected = true),
+            AiTestCase(DeckAiType.AI_EXTENDED, useAi = false, isAiQuestionExpected = false),
+            AiTestCase(DeckAiType.AI_ONLY, useAi = true, isAiQuestionExpected = true),
+            AiTestCase(DeckAiType.AI_ONLY, useAi = false, isAiQuestionExpected = true)
+        ).map { Arguments.of(it.aiType, it.useAi, it.isAiQuestionExpected) }.stream()
+
+        data class AiTestCase(
+            val aiType: DeckAiType,
+            val useAi: Boolean,
+            val isAiQuestionExpected: Boolean
+        )
+    }
+
     fun getRandQuestion(
         clientId: String,
         levelId: String,
+        ai: Boolean? = false,
     ): QuestionOutput {
-        return getRandQuestionHttpRaw(clientId, levelId).body(QuestionOutput::class.java)!!
+        return getRandQuestionHttpRaw(clientId, levelId, ai).body(QuestionOutput::class.java)!!
     }
 
     fun getRandQuestionHttpRaw(
         clientId: String,
         levelId: String,
+        ai: Boolean? = false,
     ): RestClient.ResponseSpec {
         return RestClient.create().get()
-            .uri(baseUrl() + "/api/v1/questions/random?clientId=$clientId&levelId=$levelId")
+            .uri(baseUrl() + "/api/v1/questions/random?clientId=$clientId&levelId=$levelId&ai=$ai")
             .retrieve()
             .onStatus({it.is4xxClientError || it.is5xxServerError }) { request, response -> }
     }
