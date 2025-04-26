@@ -10,6 +10,8 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #fff3e9;
     color: #2d2d2d;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 header {
@@ -39,17 +41,17 @@ nav a {
 }
 
 section {
-    width: 900px;
+    max-width: 1200px;
+    width: 80%;
     margin: auto;
 }
 
 .hero {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: 60px 40px;
     background-color: #fff3e9;
+    margin-bottom: 100px;
 }
 
 .hero-text {
@@ -80,8 +82,8 @@ section {
 }
 
 .hero img {
-    max-width: 400px;
-    width: 100%;
+    max-width: 600px;
+    width: 50%;
     margin-top: 20px;
 }
 
@@ -105,7 +107,7 @@ section {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    padding-left: 10%;
+    padding: 0 10%;
     margin-bottom: 150px;
 }
 
@@ -114,6 +116,7 @@ section {
     position: absolute;
     left: 0;
     width: 40%;
+    max-width: 700px;
 }
 
 .people2 {
@@ -131,23 +134,21 @@ section {
 .deck-section {
     display: flex;
     justify-content: space-between;
-    gap: 40px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    padding-right: 270px;
+    /*gap: 40px;*/
+    /*flex-wrap: wrap;*/
+    /*align-items: flex-start;*/
+    padding-right: 20%;
     margin-bottom: 200px;
 }
 
 .deck-section img {
     position: absolute;
-    right: -15%;
-    /* scale: 1.4; */
+    margin-left: 50%;
     width: 50%;
     object-fit: contain;
-    /* height: 551px; */
-    /* object-position: bottom; */
     z-index: -2;
     max-height: 700px;
+    max-width: 570px;
 }
 
 .openness-levels h3 {
@@ -162,16 +163,81 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .hero,
-    .brand-idea,
-    .deck-section {
+    section {
         flex-direction: column;
         text-align: center;
+        width: 80%;
     }
 
     nav ul {
-        flex-direction: column;
-        gap: 10px;
+        gap: 30px;
+    }
+
+    .hero {
+        margin-top: 0;
+        margin-bottom: 50px;
+    }
+
+    .hero-text {
+        order: 2;
+        max-width: 100%;
+    }
+
+    .hero img {
+        order: 1;
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .brand-idea {
+        padding: 0;
+        margin-bottom: 50px;
+    }
+
+    .brand-idea img {
+        display: none;
+        /*width: 100%;*/
+        /*margin-top: -200px;*/
+        /*opacity: 0.4;*/
+    }
+
+    .people2 {
+        margin: 0 0 50px 0;
+        width: 100%;
+    }
+    .people2 img {
+        margin: 0;
+        width: 100%;
+    }
+
+    .deck-section {
+        padding: 0;
+    }
+
+    .deck-section>div {
+        margin: 0;
+    }
+
+    .deck-section p {
+        /*margin: 0;*/
+        width: 100%;
+    }
+
+    .deck-section img {
+        margin-left: 0;
+        left: 0;
+        opacity: 0.3;
+        width: 95%;
+    }
+}
+
+@media (min-width: 1500px) {
+    .brand-idea {
+        /*padding-left: 0;*/
+    }
+
+    .deck-section img {
+        margin-left: 800px;
     }
 }
 
