@@ -1,4 +1,4 @@
-FROM node:18-alpine AS diplodoc
+FROM logotipiwe/node:18-alpine-diplodoc AS diplodoc
 RUN npm install -g @diplodoc/cli
 WORKDIR /app
 COPY docs ./
