@@ -5,3 +5,7 @@ spring:
   flyway:
     validate-on-migrate: false
     clean-disabled: false
+
+honest:
+  gpt:
+    service: stub

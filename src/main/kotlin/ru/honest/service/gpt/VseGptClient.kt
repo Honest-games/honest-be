@@ -1,8 +1,7 @@
 package ru.honest.service.gpt
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Primary
-import org.springframework.context.annotation.Profile
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.client.BufferingClientHttpRequestFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.stereotype.Component
@@ -11,13 +10,12 @@ import org.springframework.web.client.RestClient.ResponseSpec
 import org.springframework.web.client.bodyWithType
 
 @Component
-@Profile("gpt.vse")
-@Primary
+@ConditionalOnProperty("honest.gpt.service", havingValue = "vse")
 class VseGptClient: GptClient {
-    @Value("\${gpt.api-key}")
+    @Value("\${honest.gpt.vse.api-key}")
     private lateinit var apiKey: String
 
-    @Value("\${gpt.model}")
+    @Value("\${honest.gpt.vse.model}")
     private lateinit var model: String
 
     override fun chatCompletion(messages: List<ChatMessage>): ChatResponse {

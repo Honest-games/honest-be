@@ -1,6 +1,13 @@
-# Local setup
+# Honest backend
 
-## Commands
+## Profiles
+- `prod` - Production
+- `local` - Local development
+- `local-dc` - Local development in Docker Compose
+
+Profile `docker` is set if launch is in docker.
+
+## Local start commands
 
 Docker up:
 ```shell

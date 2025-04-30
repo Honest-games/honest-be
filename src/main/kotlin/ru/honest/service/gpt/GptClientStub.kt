@@ -1,8 +1,10 @@
 package ru.honest.service.gpt
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 
 @Component
+@ConditionalOnProperty("honest.gpt.service", havingValue = "stub")
 class GptClientStub : GptClient {
     private var stubResponse: String? = null
 

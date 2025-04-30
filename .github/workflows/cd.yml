@@ -57,7 +57,7 @@ jobs:
           password: ${{env.SSH_PASSWORD}}
           port: 22
           script: |
-            export PROFILES=prod,gpt.vse
+            export PROFILES=prod
             export IMAGE=${{ env.IMAGE }}
             export CONFIG_SERVER_DOMAIN=http://honest-config-server:8888
             cd /kuber/honest-be/
