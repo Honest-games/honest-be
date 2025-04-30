@@ -1,4 +1,5 @@
-FROM logotipiwe/node:18-alpine-diplodoc AS diplodoc
+FROM node:18-alpine AS diplodoc
+RUN npm i playwright@1.52.0 -g
 RUN npm install -g @diplodoc/cli
 WORKDIR /app
 COPY docs ./
