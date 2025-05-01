@@ -1,6 +1,6 @@
 package ru.honest.controller
 
-import ru.honest.mybatis.model.DeckAiType
+import ru.honest.mybatis.model.DeckAiUserAccessType
 import ru.honest.mybatis.model.DeckModel
 import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.model.QuestionModel
@@ -14,10 +14,10 @@ data class DeckOutput(
     val imageId: String,
     val backgroundImageId: String?,
     val modalImageId: String?,
-    val aiType: DeckAiType,
+    val aiType: DeckAiUserAccessType,
 ){
     companion object {
-        fun create(deck: DeckModel): DeckOutput {
+        fun create(deck: DeckModel, aiType: DeckAiUserAccessType): DeckOutput {
             return DeckOutput(
                 id = deck.id,
                 languageCode = deck.languageCode,
@@ -27,7 +27,7 @@ data class DeckOutput(
                 imageId = deck.imageId,
                 backgroundImageId = deck.bgImageId,
                 modalImageId = deck.modalImageId,
-                aiType = deck.aiType
+                aiType = aiType
             )
         }
     }

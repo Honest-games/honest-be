@@ -6,20 +6,21 @@ import ru.honest.mybatis.model.QuestionHistoryModel
 import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.model.UsedQuestion
 import ru.honest.mybatis.repo.*
+import ru.honest.service.GenQuestionContext
 import ru.honest.service.QuestionsService.GetQuestionAnswer
 import java.time.LocalDateTime
 import java.util.*
 
 @Component
 class GetRandomQuestionStrategy(
-    private val levelsRepo: LevelsRepo,
     private val usedQuestionsRepo: UsedQuestionsRepo,
     private val questionsRepo: QuestionsRepo,
     private val honestProps: HonestProps,
     private val questionsHistoryRepo: QuestionsHistoryRepo,
-    private val decksRepo: DecksRepo
 ) : GetQuestionStrategy {
-    override fun getQuestion(levelId: String, clientId: String, ai: Boolean): GetQuestionAnswer {
+    override fun getQuestion(context: GenQuestionContext): GetQuestionAnswer {
+        val clientId = context.clientId
+        val levelId = context.levelId
         val usedLevelQuestions = usedQuestionsRepo.getUsedQuestions(clientId, setOf(levelId))
         val questions = questionsRepo.getQuestionsByLevel(levelId)
         val notUsedQuestions = (
@@ -50,8 +51,7 @@ class GetRandomQuestionStrategy(
         return GetQuestionAnswer(question, false)
     }
 
-    override fun shouldBeUsed(levelId: String, clientId: String, ai: Boolean): Boolean {
-        val deck = decksRepo.getDecks(levelId = levelId).firstOrNull() ?: return false
-        return deck.isNonAi() || (deck.isAiExtended() && !ai)
+    override fun shouldBeUsed(genQuestionContext: GenQuestionContext): Boolean {
+        return true
     }
 }

@@ -7,20 +7,16 @@ import ru.honest.exception.HonestEntityNotFound
 import ru.honest.filterKeysNotNull
 import ru.honest.mybatis.model.LevelModel
 import ru.honest.mybatis.model.QuestionModel
-import ru.honest.mybatis.repo.LevelsRepo
-import ru.honest.mybatis.repo.QuestionsHistoryRepo
-import ru.honest.mybatis.repo.QuestionsRepo
-import ru.honest.mybatis.repo.UsedQuestionsRepo
+import ru.honest.mybatis.repo.*
 import ru.honest.service.question.GetQuestionStrategy
 
 @Service
 class QuestionsService(
     private val questionsRepo: QuestionsRepo,
-    private val usedQuestionsRepo: UsedQuestionsRepo,
-    private val questionsHistoryRepo: QuestionsHistoryRepo,
-    private val honestProps: HonestProps,
     private val levelsRepo: LevelsRepo,
-    private val getQuestionStrategies: List<GetQuestionStrategy>
+    private val getQuestionStrategies: List<GetQuestionStrategy>,
+    private val decksRepo: DecksRepo,
+    private val promoService: PromoService
 ) {
     @Transactional
     fun getQuestion(
@@ -31,14 +27,26 @@ class QuestionsService(
         if (!levelsRepo.exists(levelId)) {
             throw HonestEntityNotFound("Level $levelId not found")
         }
+        val context = collectGenQuestionContext(levelId, clientId, aiGen)
         getQuestionStrategies.forEach { getQuestionStrategy ->
             with(getQuestionStrategy){
-                if (shouldBeUsed(levelId, clientId, aiGen)) {
-                    return getQuestion(levelId, clientId, aiGen)
-                }
+                if (shouldBeUsed(context)) return getQuestion(context)
             }
         }
         throw IllegalStateException("Question strategy not found for level $levelId and client $clientId")
+    }
+
+    fun collectGenQuestionContext(levelId: String, clientId: String, aiGen: Boolean): GenQuestionContext {
+        val deck = decksRepo.getDecks(levelId = levelId).firstOrNull()
+            ?: throw HonestEntityNotFound("Deck with id $levelId not found")
+        val enteredPromos = promoService.getEnteredPromos(clientId)
+        return GenQuestionContext(
+            levelId = levelId,
+            clientId = clientId,
+            aiGen = aiGen,
+            deck = deck,
+            clientEnteredPromos = enteredPromos,
+        )
     }
 
     fun getQuestionsByLevel(levels: List<LevelModel>): Map<LevelModel, List<QuestionModel>>{

@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.repo.DecksRepo
 import ru.honest.mybatis.repo.QuestionsRepo
+import ru.honest.service.GenQuestionContext
 import ru.honest.service.QuestionsService.GetQuestionAnswer
 import ru.honest.service.gpt.GptService
 
@@ -15,7 +16,9 @@ class GetAiGeneratedQuestion(
     private val gptService: GptService
 ) : GetQuestionStrategy {
     @Transactional
-    override fun getQuestion(levelId: String, clientId: String, ai: Boolean): GetQuestionAnswer {
+    override fun getQuestion(genQuestionContext: GenQuestionContext): GetQuestionAnswer {
+        val clientId = genQuestionContext.clientId
+        val levelId = genQuestionContext.levelId
         val levelQuestions = questionsRepo.getQuestionsByLevel(levelId)
         val alreadyGeneratedQuestions = questionsRepo.getAlreadyAiGeneratedQuestions(levelId, clientId)
         val similarQuestions = buildList {
@@ -25,16 +28,20 @@ class GetAiGeneratedQuestion(
         val aiGeneratedQuestion = gptService.createQuestionFromSimilar(similarQuestions)
         questionsRepo.addAiGeneratedQuestionToHistory(aiGeneratedQuestion, levelId, clientId)
 
-        return GetQuestionAnswer(QuestionModel(
-            id = "-1",
-            levelId = levelId,
-            text = aiGeneratedQuestion,
-            additionalText = null
-        ), false)
+        return GetQuestionAnswer(
+            QuestionModel(
+                id = "-1",
+                levelId = levelId,
+                text = aiGeneratedQuestion,
+                additionalText = null
+            ), false
+        )
     }
 
-    override fun shouldBeUsed(levelId: String, clientId: String, ai: Boolean): Boolean {
-        val deck = decksRepo.getDecks(levelId = levelId).firstOrNull() ?: return false
-        return deck.isAiOnly() || (deck.isAiExtended() && ai)
+    override fun shouldBeUsed(context: GenQuestionContext): Boolean {
+        return context.deck.isAiOnly()
+                || (context.aiGen
+                && context.clientEnteredPromos.any { it.isDeckExtendAi() && it.deckId == context.deck.id }
+                )
     }
 }

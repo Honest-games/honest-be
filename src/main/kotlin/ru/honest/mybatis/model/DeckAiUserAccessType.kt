@@ -1,7 +1,7 @@
 package ru.honest.mybatis.model
 
-enum class DeckAiType {
+enum class DeckAiUserAccessType {
     NON_AI,
-//    AI_EXTENDED,
+    AI_EXTENDED,
     AI_ONLY
 }

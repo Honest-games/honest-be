@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
+        'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace="ru.honest.mybatis.repo.PromosRepo">
+    <sql id="promoAll">
+        id, promo_code, deck_id, promo_type, deleted_at is not null
+    </sql>
+
+    <sql id="promoInsertAll">
+        promo_code, deck_id, promo_type
+    </sql>
+
+    <sql id="enteredAll">
+        id, promo_id, client_id
+    </sql>
+
+    <sql id="enteredInsertAll">
+        promo_id, client_id
+    </sql>
+
+    <select id="findPromo">
+        SELECT <include refid="promoAll"/>
+        FROM promos
+        WHERE promo_code = #{promoCode}
+        AND deleted_at IS NULL
+    </select>
+
+    <select id="findPromoById">
+        SELECT <include refid="promoAll"/>
+        FROM promos
+        WHERE id = #{id}
+        AND deleted_at IS NULL
+    </select>
+
+    <insert id="enterPromo">
+        INSERT INTO entered_promos (<include refid="enteredInsertAll"/>)
+        VALUES (#{promoId}, #{clientId})
+    </insert>
+
+    <insert id="createPromo" parameterType="PromoModel">
+        INSERT INTO promos (<include refid="promoInsertAll"/>)
+        VALUES (#{promoCode}, #{deckId}, #{promoType}) returning id
+    </insert>
+
+    <select id="getEnteredPromos">
+        SELECT <include refid="promoAll"/>
+        FROM promos
+        WHERE id IN (
+            SELECT promo_id
+            FROM entered_promos
+            WHERE client_id = #{clientId}
+        )
+        <if test="promoType != null">
+            AND promo_type = #{promoType}
+        </if>
+    </select>
+</mapper>
