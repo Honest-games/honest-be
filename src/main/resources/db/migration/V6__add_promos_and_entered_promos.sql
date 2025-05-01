@@ -19,3 +19,5 @@ create table entered_promos (
 
 create unique index entered_promos_client_id_promo_id_unique
     on entered_promos (client_id, promo_id);
+
+update decks set ai_type = 'NON_AI' where ai_type = 'AI_EXTENDED';
