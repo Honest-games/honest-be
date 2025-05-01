@@ -10,10 +10,11 @@ class GptService(
     private val honestProps: HonestProps,
 ) {
     fun createQuestionFromSimilar(similarQuestions: List<String>): String {
-        val question = "${honestProps.gptQuestionRequestPrefix} ${similarQuestions.joinToString(";\n ")} "
+        val prompt = honestProps.gptGenQuestionPromptTemplate
+            .replace("{questions}", similarQuestions.joinToString(";\n "))
         val messages = listOf(
             ChatMessage(role = GptChatRole.SYSTEM, content = honestProps.gptSystemMessage),
-            ChatMessage(role = GptChatRole.USER, content = question),
+            ChatMessage(role = GptChatRole.USER, content = prompt),
         )
         try {
             val response = gptClient.chatCompletion(messages)

@@ -52,7 +52,7 @@ honest:
       api-key: ${GPT_API_KEY}
       model: ${GPT_MODEL}
     questions-gen:
-      request-prefix: ${GPT_QUESTION_PREFIX}
+      prompt-template: ${GPT_GEN_QUESTION_PROMPT_TEMPLATE}
       error-message: ${GPT_QUESTION_ERROR_MESSAGE}
       system-message: ${GPT_SYSTEM_MESSAGE}
 
