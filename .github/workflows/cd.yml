@@ -1,4 +1,4 @@
-name: Honest Backend CI
+name: Honest Backend old CI
 on:
   push:
     branches: [ "main" ]
