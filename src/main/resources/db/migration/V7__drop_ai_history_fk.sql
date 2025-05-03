@@ -1,0 +1,2 @@
+alter table public.ai_generated_questions_history
+    drop constraint ai_generated_questions_history_level_id_fkey;
