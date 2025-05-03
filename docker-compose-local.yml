@@ -1,20 +1,8 @@
 version: '3.8'
-name: honest-be
 
 services:
   honest-be:
     build: .
-    container_name: honest-be
-    restart: always
+    image: honest-be-local
     environment:
-      - PROFILES=local-dc
-      - ADDITIONAL_PROFILES=docker
-      - CONFIG_SERVER_DOMAIN=${CONFIG_SERVER_DOMAIN}
-      - DB_USER=postgres
-      - DB_PASSWORD=1234
-    networks:
-      - dc-net
-
-networks:
-  dc-net:
-    external: true
+      PROFILES: docker,local-dc

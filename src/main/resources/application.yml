@@ -12,7 +12,7 @@ logging:
 spring:
   profiles:
     active: ${PROFILES:}
-    include: ${ADDITIONAL_PROFILES}
+    include: ${ADDITIONAL_PROFILES:}
   cloud:
     config:
       enabled: false
@@ -74,14 +74,11 @@ spring:
   config:
     import: configserver:${CONFIG_SERVER_DOMAIN}
     activate:
-      on-profile: prod,stage,docker
+      on-profile: docker
   cloud:
     config:
       fail-fast: true
       enabled: true
-
-server:
-  port: 80
 
 springdoc:
   swagger-ui:

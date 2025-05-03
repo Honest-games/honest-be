@@ -6,29 +6,29 @@ on:
   workflow_call:
 jobs:
   build:
-    if: contains(github.event.head_commit.message, '[deploy-old]')
+    if: contains(github.event.head_commit.message, '[deploy]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: Logotipiwe/dc_vars
-          token: ${{secrets.PAT}}
+          repository: Honest-games/honest-secrets
+          token: ${{secrets.CI_PAT}}
       - name: load-env
         uses: duskmoon314/action-load-env@v1.1.0
       - name: Checkout project
         uses: actions/checkout@v3
         with:
-          repository: Logotipiwe/honest-be
-          token: ${{secrets.PAT}}
-      - name: Create folder
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{env.DC_HOST}}
-          username: ${{env.SSH_USER}}
-          password: ${{env.SSH_PASSWORD}}
-          port: 22
-          script: |
-            mkdir -p /kuber/honest-be
+          repository: ${{env.GITHUB_REPOSITORY}}
+          token: ${{secrets.CI_PAT}}
+#      - name: Create folder
+#        uses: appleboy/ssh-action@v0.1.10
+#        with:
+#          host: ${{env.SSH_IP}}
+#          username: ${{env.SSH_USER}}
+#          password: ${{env.SSH_PASSWORD}}
+#          port: 22
+#          script: |
+#            mkdir -p /kuber/honest-be
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -46,15 +46,15 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: ./docker-compose.yml
-          remote: /kuber/honest-be/docker-compose.yml
+          remote: /honest/honest-be/docker-compose.yml
           concurrency: 20
-          host: ${{env.DC_HOST}}
+          host: ${{env.SSH_IP}}
           username: ${{env.SSH_USER}}
           password: ${{env.SSH_PASSWORD}}
       - name: Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{env.DC_HOST}}
+          host: ${{env.SSH_IP}}
           username: ${{env.SSH_USER}}
           password: ${{env.SSH_PASSWORD}}
           port: 22
@@ -62,7 +62,8 @@ jobs:
             export PROFILES=prod,docker
             export IMAGE=${{ env.IMAGE }}
             export CONFIG_SERVER_DOMAIN=http://honest-config-server:8888
-            cd /kuber/honest-be/
+            cd /honest/honest-be/
             
-            docker-compose down --remove-orphans
-            docker-compose up -d
+            docker compose pull
+            docker compose down --remove-orphans
+            docker compose up -d

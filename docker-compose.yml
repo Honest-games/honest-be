@@ -8,7 +8,6 @@ services:
     restart: always
     environment:
       - PROFILES=${PROFILES}
-      - ADDITIONAL_PROFILES=docker
       - CONFIG_SERVER_DOMAIN=${CONFIG_SERVER_DOMAIN}
     networks:
       - dc-net
