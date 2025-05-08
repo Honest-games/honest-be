@@ -1,5 +1,7 @@
 package ru.honest.service.question
 
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import ru.honest.config.HonestProps
 import ru.honest.mybatis.model.QuestionHistoryModel
@@ -14,6 +16,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Component
+@Order(Ordered.LOWEST_PRECEDENCE)
 class GetRandomQuestionStrategy(
     private val usedQuestionsRepo: UsedQuestionsRepo,
     private val questionsRepo: QuestionsRepo,

@@ -43,6 +43,7 @@ class GetAiGeneratedQuestion(
             deck.isAiOnly()
                 || (deck.isAiExtended() && aiGen)
                 || (aiGen
+                    // TODO логику промокодов перенести в сервис
                 && clientEnteredPromos.any { it.isDeckExtendAi() && it.deckId == context.deck.id }
                 )
         }
