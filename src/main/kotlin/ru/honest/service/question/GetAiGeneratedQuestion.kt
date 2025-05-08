@@ -1,5 +1,6 @@
 package ru.honest.service.question
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import ru.honest.mybatis.model.QuestionModel
@@ -39,6 +40,7 @@ class GetAiGeneratedQuestion(
     }
 
     override fun shouldBeUsed(context: GenQuestionContext): Boolean {
+        log.info("[${context.clientId}] trying ${this::class.qualifiedName} strategy...")
         return with(context) {
             deck.isAiOnly()
                 || (deck.isAiExtended() && aiGen)
@@ -47,5 +49,9 @@ class GetAiGeneratedQuestion(
                 && clientEnteredPromos.any { it.isDeckExtendAi() && it.deckId == context.deck.id }
                 )
         }
+    }
+
+    companion object {
+        val log = LoggerFactory.getLogger(GetAiGeneratedQuestion::class.java)
     }
 }
