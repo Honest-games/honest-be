@@ -6,5 +6,5 @@ import ru.honest.service.dto.GenQuestionContext
 interface GetQuestionStrategy {
     fun getQuestion(genQuestionContext: GenQuestionContext): GetQuestionAnswer
 
-    fun shouldBeUsed(genQuestionContext: GenQuestionContext): Boolean
+    fun shouldBeUsed(genQuestionContext: GenQuestionContext): Boolean = false
 }

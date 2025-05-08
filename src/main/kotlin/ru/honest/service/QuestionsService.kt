@@ -12,15 +12,19 @@ import ru.honest.mybatis.repo.LevelsRepo
 import ru.honest.mybatis.repo.QuestionsRepo
 import ru.honest.service.dto.GenQuestionContext
 import ru.honest.service.question.GetQuestionStrategy
+import ru.honest.service.question.GetRandomQuestionStrategy
 
 @Service
 class QuestionsService(
     private val questionsRepo: QuestionsRepo,
     private val levelsRepo: LevelsRepo,
     private val getQuestionStrategies: List<GetQuestionStrategy>,
+    private val getRandomQuestionStrategy: GetRandomQuestionStrategy,
     private val decksRepo: DecksRepo,
     private val promoService: PromoService
 ) {
+    val defaultGetQuestionStrategy = getRandomQuestionStrategy
+
     @Transactional
     fun getQuestion(
         levelId: String,
@@ -32,17 +36,12 @@ class QuestionsService(
         }
         log.info("[$clientId] Getting question...")
         val context = collectGenQuestionContext(levelId, clientId, aiGen)
-        getQuestionStrategies.forEach { getQuestionStrategy ->
-            with(getQuestionStrategy) {
-                if (shouldBeUsed(context)) {
-                    log.info("[$clientId] Using strategy ${getQuestionStrategy::class.simpleName}")
-                    val question = getQuestion(context)
-                    log.info("[$clientId] Question got: ${question.question.text}")
-                    return question
-                }
-            }
-        }
-        throw IllegalStateException("Question strategy not found for level $levelId and client $clientId")
+        val strategy = getQuestionStrategies.find { it.shouldBeUsed(context) }
+            ?: defaultGetQuestionStrategy
+        log.info("[$clientId] Using strategy ${strategy::class.simpleName}")
+        val question = strategy.getQuestion(context)
+        log.info("[$clientId] Question got: ${question.question.text}")
+        return question
     }
 
     fun collectGenQuestionContext(levelId: String, clientId: String, aiGen: Boolean): GenQuestionContext {
