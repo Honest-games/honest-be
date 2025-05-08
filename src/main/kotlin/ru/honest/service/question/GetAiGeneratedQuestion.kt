@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional
 import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.repo.DecksRepo
 import ru.honest.mybatis.repo.QuestionsRepo
-import ru.honest.service.GenQuestionContext
 import ru.honest.service.QuestionsService.GetQuestionAnswer
+import ru.honest.service.dto.GenQuestionContext
 import ru.honest.service.gpt.GptService
 
 @Component
@@ -39,9 +39,12 @@ class GetAiGeneratedQuestion(
     }
 
     override fun shouldBeUsed(context: GenQuestionContext): Boolean {
-        return context.deck.isAiOnly()
-                || (context.aiGen
-                && context.clientEnteredPromos.any { it.isDeckExtendAi() && it.deckId == context.deck.id }
+        return with(context) {
+            deck.isAiOnly()
+                || (deck.isAiExtended() && aiGen)
+                || (aiGen
+                && clientEnteredPromos.any { it.isDeckExtendAi() && it.deckId == context.deck.id }
                 )
+        }
     }
 }

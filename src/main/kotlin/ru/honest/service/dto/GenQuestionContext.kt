@@ -1,4 +1,4 @@
-package ru.honest.service
+package ru.honest.service.dto
 
 import ru.honest.mybatis.model.DeckAiType
 import ru.honest.mybatis.model.DeckModel

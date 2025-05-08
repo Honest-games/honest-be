@@ -5,9 +5,11 @@ import ru.honest.config.HonestProps
 import ru.honest.mybatis.model.QuestionHistoryModel
 import ru.honest.mybatis.model.QuestionModel
 import ru.honest.mybatis.model.UsedQuestion
-import ru.honest.mybatis.repo.*
-import ru.honest.service.GenQuestionContext
+import ru.honest.mybatis.repo.QuestionsHistoryRepo
+import ru.honest.mybatis.repo.QuestionsRepo
+import ru.honest.mybatis.repo.UsedQuestionsRepo
 import ru.honest.service.QuestionsService.GetQuestionAnswer
+import ru.honest.service.dto.GenQuestionContext
 import java.time.LocalDateTime
 import java.util.*
 
