@@ -12,7 +12,6 @@ import ru.honest.factory.LevelsFactory
 import ru.honest.factory.QuestionsFactory
 import ru.honest.factory.VectorImageFactory
 import ru.honest.mybatis.model.DeckAiType
-import ru.honest.mybatis.model.DeckAiUserAccessType
 import ru.honest.mybatis.model.DeckModel
 import kotlin.test.assertEquals
 
@@ -84,7 +83,7 @@ class DecksControllerTest(
             imageId = "image_1",
             backgroundImageId = "bg_1",
             modalImageId = "md_1",
-            aiType = DeckAiUserAccessType.NON_AI,
+            aiType = DeckAiType.NON_AI,
         ), decks[0])
     }
 

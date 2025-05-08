@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service
 import ru.honest.controller.DeckOutput
 import ru.honest.exception.HonestEntityNotFound
 import ru.honest.mybatis.model.DeckAiType
-import ru.honest.mybatis.model.DeckAiUserAccessType
 import ru.honest.mybatis.model.enums.PromoType
 import ru.honest.mybatis.repo.DecksRepo
 import ru.honest.mybatis.repo.LevelsRepo
@@ -28,9 +27,9 @@ class DecksService(
 
         return decksToReturn.map { DeckOutput.create(it, when (it.aiType) {
             DeckAiType.NON_AI ->
-                if(aiUnlockedDecksIds.contains(it.id)) DeckAiUserAccessType.AI_EXTENDED
-                else DeckAiUserAccessType.NON_AI
-            DeckAiType.AI_ONLY -> DeckAiUserAccessType.AI_ONLY
+                if(aiUnlockedDecksIds.contains(it.id)) DeckAiType.AI_EXTENDED
+                else DeckAiType.NON_AI
+            else -> it.aiType
         }) }
     }
 

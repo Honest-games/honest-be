@@ -11,7 +11,6 @@ import ru.honest.factory.LevelsFactory
 import ru.honest.factory.PromoFactory
 import ru.honest.factory.QuestionsFactory
 import ru.honest.mybatis.model.DeckAiType
-import ru.honest.mybatis.model.DeckAiUserAccessType
 import ru.honest.service.gpt.GptClientStub
 
 @TestConstructor(autowireMode = ALL)
@@ -23,16 +22,16 @@ class DecksAiTest(
     private var promoFactory: PromoFactory
 ): BaseTest() {
     @ParameterizedTest(name = "{0}")
-    @MethodSource("nonAiAccessTestCases")
-    fun `non-ai access test`(name: String, testCase: AiAccessTestCase) {
-        val d = decksFactory.createDeck()
+    @MethodSource("deckTypeTestCases")
+    fun `deck type test`(name: String, testCase: AiAccessTestCase) {
+        val d = decksFactory.createDeck(aiType = testCase.deckAiType)
         testCase.deckPromo?.let {
             promoFactory.createPromo(deckId = d.id, promoCode = testCase.deckPromo)
         }
         enterPromo(testCase.enterPromoClientId, testCase.enteredPromo)
         val deck = getDecks(testCase.requesterClientId).first()
-        assert(deck.aiType == testCase.expectedDeckAiAccessType) {
-            "Expected deck AI type ${testCase.expectedDeckAiAccessType}, but got ${deck.aiType}"
+        assert(deck.aiType == testCase.expectedDeckAiType) {
+            "Expected deck AI type ${testCase.expectedDeckAiType}, but got ${deck.aiType}"
         }
     }
 
@@ -64,39 +63,65 @@ class DecksAiTest(
             val enteredPromo: String? = null,
             val enterPromoClientId: String? = null,
             val requesterClientId: String,
-            val expectedDeckAiAccessType: DeckAiUserAccessType,
+            val deckAiType: DeckAiType,
+            val expectedDeckAiType: DeckAiType,
         )
 
         @JvmStatic
-        fun nonAiAccessTestCases() = listOf(
+        fun deckTypeTestCases() = listOf(
             Arguments.of(
-                "becomes ai-extended after needed promo",
+                "non-ai,ai-extend promo - becomes ai-extended",
                 AiAccessTestCase(
                     deckPromo = "prom",
                     enteredPromo = "prom",
                     enterPromoClientId = "client1",
                     requesterClientId = "client1",
-                    expectedDeckAiAccessType = DeckAiUserAccessType.AI_EXTENDED,
+                    deckAiType = DeckAiType.NON_AI,
+                    expectedDeckAiType = DeckAiType.AI_EXTENDED,
                 )
             ),
             Arguments.of(
-                "non-ai after wrong promo",
+                "ai-extended,ai-extend promo - ai-extended",
+                AiAccessTestCase(
+                    deckPromo = "prom",
+                    enteredPromo = "prom",
+                    enterPromoClientId = "client1",
+                    requesterClientId = "client1",
+                    deckAiType = DeckAiType.AI_EXTENDED,
+                    expectedDeckAiType = DeckAiType.AI_EXTENDED,
+                )
+            ),
+            Arguments.of(
+                "ai-only,ai-extend promo - ai-only",
+                AiAccessTestCase(
+                    deckPromo = "prom",
+                    enteredPromo = "prom",
+                    enterPromoClientId = "client1",
+                    requesterClientId = "client1",
+                    deckAiType = DeckAiType.AI_ONLY,
+                    expectedDeckAiType = DeckAiType.AI_ONLY,
+                )
+            ),
+            Arguments.of(
+                "non-ai,wrong promo - non-ai",
                 AiAccessTestCase(
                     deckPromo = "prom",
                     enteredPromo = "wrong",
                     enterPromoClientId = "client1",
                     requesterClientId = "client1",
-                    expectedDeckAiAccessType = DeckAiUserAccessType.NON_AI,
+                    deckAiType = DeckAiType.NON_AI,
+                    expectedDeckAiType = DeckAiType.NON_AI,
                 )
             ),
             Arguments.of(
-                "non-ai for other user",
+                "non-ai,ai-extend promo,other user - non-ai",
                 AiAccessTestCase(
                     deckPromo = "prom",
                     enteredPromo = "prom",
                     enterPromoClientId = "client2",
                     requesterClientId = "client1",
-                    expectedDeckAiAccessType = DeckAiUserAccessType.NON_AI,
+                    deckAiType = DeckAiType.NON_AI,
+                    expectedDeckAiType = DeckAiType.NON_AI,
                 )
             ),
         )
@@ -113,7 +138,7 @@ class DecksAiTest(
         @JvmStatic
         fun aiGenerateTestCases() = listOf(
             Arguments.of(
-                "non-ai deck - doesn't gen ai",
+                "non-ai,ai gen - non-ai",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.NON_AI,
                     isAiRequested = true,
@@ -121,7 +146,7 @@ class DecksAiTest(
                 )
             ),
             Arguments.of(
-                "ai-extended deck - gen ai if requested",
+                "ai-extended,ai gen - ai",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.NON_AI,
                     isPromoCorrect = true,
@@ -130,7 +155,7 @@ class DecksAiTest(
                 )
             ),
             Arguments.of(
-                "ai-extended deck - gen usual question if requested",
+                "ai-extended,usual - usual",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.NON_AI,
                     isPromoCorrect = true,
@@ -139,7 +164,7 @@ class DecksAiTest(
                 )
             ),
             Arguments.of(
-                "ai-extended deck - doesn't gen ai for other user",
+                "non-ai,ai promo,ai gen,other user - usual",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.NON_AI,
                     isPromoCorrect = true,
@@ -150,7 +175,7 @@ class DecksAiTest(
                 )
             ),
             Arguments.of(
-                "ai-only deck - gen ai if requested",
+                "ai-only,ai gen - ai",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.AI_ONLY,
                     isAiRequested = true,
@@ -158,7 +183,7 @@ class DecksAiTest(
                 )
             ),
             Arguments.of(
-                "ai-only deck - gen ai if not requested",
+                "ai-only,usual - ai",
                 AiGenerateTestCase(
                     deckAiType = DeckAiType.AI_ONLY,
                     isAiRequested = false,

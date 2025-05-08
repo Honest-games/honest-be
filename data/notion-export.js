@@ -1,4 +1,6 @@
-let res = "START TRANSACTION; TRUNCATE TABLE questions; TRUNCATE TABLE levels; TRUNCATE TABLE decks;"
+let res = "START TRANSACTION;"
+
+// TRUNCATE TABLE questions; TRUNCATE TABLE levels; TRUNCATE TABLE decks;"
 
 res += "INSERT INTO decks (id, language_code, name, description, labels, vector_image_id, hidden, promo, deck_order) VALUES ";
 
@@ -20,7 +22,16 @@ res += Array.from(document.querySelector('[data-block-id=de41a85a-3671-43a2-800a
         return `('${id}', '${lang.substring(0,2).toUpperCase()}', '${name}', '${desc}', '${labels}', '${imageId}', ${promo ? "true" : "false"}, ${promoValue}, ${order})`
     }).join(", ")
 
-res += ";"
+res += ` on conflict (id) do update set
+        language_code = excluded.language_code,
+        name = excluded.name,
+        description = excluded.description,
+        labels = excluded.labels,
+        vector_image_id = excluded.vector_image_id,
+        hidden = excluded.hidden,
+        promo = excluded.promo,
+        deck_order = excluded.deck_order;`
+
 res += "INSERT INTO levels (id, deck_id, level_order, name, description, color,bg_image_id) VALUES "
 
 res += Array.from(document.querySelectorAll('.notion-collection_view-block')[4]
@@ -39,7 +50,14 @@ res += Array.from(document.querySelectorAll('.notion-collection_view-block')[4]
         return `('${id}', '${deckId}', ${levelOrder}, '${name}', '${desc}', '${color}', ${bgImageId===""?null:`'${bgImageId}'`})`
     }).join(", ");
 
-res += ";"
+res += `on conflict (id) do update set
+        deck_id = excluded.deck_id,
+        level_order = excluded.level_order,
+        name = excluded.name,
+        description = excluded.description,
+        color = excluded.color,
+        bg_image_id = excluded.bg_image_id;`
+
 res += "INSERT INTO questions (id, level_id, text, additional_text) VALUES ";
 
 res += Array.from(document.querySelectorAll('.notion-collection_view-block')[8]
@@ -51,7 +69,13 @@ res += Array.from(document.querySelectorAll('.notion-collection_view-block')[8]
         return `('${cells[0]}', '${cells[1]}', '${processText(cells[2])}', ${additional ? `'${additional}'` : 'null'})`;
     }).join(", ")
 
-res += "; COMMIT;"
+res += `       on conflict (id) do update set
+         id = excluded.id,
+         level_id = excluded.level_id,
+         text = excluded.text,
+         additional_text = excluded.additional_text;`
+
+res += " COMMIT;"
 
 function processText(text) {
     return text.replaceAll("'","''")
