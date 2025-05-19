@@ -29,6 +29,7 @@ class DecksFactory(
             modalImageId = null,
             order = order,
             aiType = aiType,
+            color = "0,0,0",
         )
         decksRepo.save(deck)
         return deck

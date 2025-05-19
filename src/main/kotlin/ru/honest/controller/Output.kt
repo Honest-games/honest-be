@@ -15,6 +15,7 @@ data class DeckOutput(
     val backgroundImageId: String?,
     val modalImageId: String?,
     val aiType: DeckAiType,
+    val color: String,
 ){
     companion object {
         fun create(deck: DeckModel, aiType: DeckAiType): DeckOutput {
@@ -27,7 +28,8 @@ data class DeckOutput(
                 imageId = deck.imageId,
                 backgroundImageId = deck.bgImageId,
                 modalImageId = deck.modalImageId,
-                aiType = aiType
+                aiType = aiType,
+                color = deck.color,
             )
         }
     }

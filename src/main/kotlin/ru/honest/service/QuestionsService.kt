@@ -34,13 +34,13 @@ class QuestionsService(
         if (!levelsRepo.exists(levelId)) {
             throw HonestEntityNotFound("Level $levelId not found")
         }
-        log.info("[$clientId] Getting question...")
+        log.info("[client $clientId] Getting question...")
         val context = collectGenQuestionContext(levelId, clientId, aiGen)
         val strategy = getQuestionStrategies.find { it.shouldBeUsed(context) }
             ?: defaultGetQuestionStrategy
-        log.info("[$clientId] Using strategy ${strategy::class.simpleName}")
+        log.info("[client $clientId] Using strategy ${strategy::class.simpleName}")
         val question = strategy.getQuestion(context)
-        log.info("[$clientId] Question got: ${question.question.text}")
+        log.info("[client $clientId] Question got: ${question.question.text}")
         return question
     }
 

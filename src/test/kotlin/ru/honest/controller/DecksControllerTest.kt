@@ -72,6 +72,7 @@ class DecksControllerTest(
             modalImageId = modalImageId,
             order = 1,
             aiType = DeckAiType.NON_AI,
+            color = "100,200,100",
         ))
         val decks = getDecks("1")
         assertEquals(DeckOutput(
@@ -84,6 +85,7 @@ class DecksControllerTest(
             backgroundImageId = "bg_1",
             modalImageId = "md_1",
             aiType = DeckAiType.NON_AI,
+            color = "100,200,100",
         ), decks[0])
     }
 
