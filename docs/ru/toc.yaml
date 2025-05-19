@@ -3,7 +3,6 @@ href: index.yaml
 
 navigation:
   logo:
-#    url: "https://logotipiwe.ru/honest-be/swagger-ui/index.html"
     dark:
       icon: "logo.svg"
     light:
