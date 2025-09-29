@@ -14,4 +14,18 @@
         INSERT INTO questions_history
         VALUES (#{id}, #{levelId}, #{questionId}, #{clientId}, #{time})
     </insert>
+
+    <select id="countByClientId" resultType="int">
+        SELECT COUNT(DISTINCT id)
+        FROM questions_history
+        WHERE client_id = #{clientId}
+    </select>
+
+    <select id="countByClientIdAndDeck" resultType="int">
+        SELECT COUNT(DISTINCT qh.id)
+        FROM questions_history qh
+        JOIN levels l ON qh.level_id = l.id
+        WHERE qh.client_id = #{clientId}
+        AND l.deck_id = #{deckId}
+    </select>
 </mapper>

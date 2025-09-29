@@ -41,6 +41,7 @@ data class QuestionOutput(
     val text: String,
     val additionalTest: String?,
     val isLast: Boolean,
+    val isPurchaseRequired: Boolean = false,
 ){
     companion object {
         fun create(q: QuestionModel, isLast: Boolean): QuestionOutput {
@@ -49,7 +50,19 @@ data class QuestionOutput(
                 levelId = q.levelId,
                 text = q.text,
                 additionalTest = q.additionalText,
-                isLast = isLast
+                isLast = isLast,
+                isPurchaseRequired = false
+            )
+        }
+
+        fun createPurchaseRequired(levelId: String, questionsLimit: Int): QuestionOutput {
+            return QuestionOutput(
+                id = "-2",
+                levelId = levelId,
+                text = "Вы использовали все $questionsLimit бесплатных вопросов.",
+                additionalTest = "Для продолжения приобретите полный доступ к колоде.",
+                isLast = false,
+                isPurchaseRequired = true
             )
         }
     }

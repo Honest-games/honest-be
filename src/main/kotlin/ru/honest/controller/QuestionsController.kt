@@ -20,6 +20,17 @@ class QuestionsController(
         @RequestParam ai: Boolean = false,
     ): QuestionOutput {
         val answer = questionsService.getQuestion(levelId, clientId, ai)
-        return QuestionOutput.create(answer.question, answer.isLast)
+        return if (answer.question.id == "-2") {
+            QuestionOutput(
+                id = answer.question.id,
+                levelId = answer.question.levelId,
+                text = answer.question.text,
+                additionalTest = answer.question.additionalText,
+                isLast = answer.isLast,
+                isPurchaseRequired = true
+            )
+        } else {
+            QuestionOutput.create(answer.question, answer.isLast)
+        }
     }
 }
