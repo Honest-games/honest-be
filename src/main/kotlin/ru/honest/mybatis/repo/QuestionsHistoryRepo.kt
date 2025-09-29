@@ -7,4 +7,6 @@ import ru.honest.mybatis.model.QuestionHistoryModel
 interface QuestionsHistoryRepo {
     fun save(questionHistory: QuestionHistoryModel)
     fun findAll(): List<QuestionHistoryModel>
+    fun countByClientId(clientId: String): Int
+    fun countByClientIdAndDeck(clientId: String, deckId: String): Int
 }
